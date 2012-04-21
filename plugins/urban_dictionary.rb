@@ -1,5 +1,7 @@
 class UrbanDictionary
   include Cinch::Plugin
+  require 'nokogiri'
+  require 'open-uri'
 
   match /ud (.*)/
 

@@ -1,5 +1,7 @@
 class TitleLookup
   include Cinch::Plugin
+  require 'nokogiri'
+  require 'open-uri'
 
   listen_to :channel
 
