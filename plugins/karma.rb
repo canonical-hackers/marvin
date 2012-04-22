@@ -6,22 +6,22 @@ class Karma
 
   def initialize(*args)
     super
-    @karma = {}
+    @karma = Hash.new(0)
   end
 
   def listen(m)
     add = m.message.scan(/(\S+)\+\+/).map { |k| k.first }
-    add.each do |k| 
-      @karma[k] ? @karma[k] =+ 1 : @karma[k] = 1
+    add.each do |k|
+      @karma[k] += 1
     end
 
     sub = m.message.scan(/(\S+)\-\-/).map { |k| k.first }
-    sub.each do |k| 
-      @karma[k] ? @karma[k] =- 1 : @karma[k] = -1
+    sub.each do |k|
+      @karma[k] -= 1
     end
   end
 
   def execute(m, item)
-    m.reply("Karma for #{item} is #{@karma[item] || '0' }")
-  end 
+    m.reply("Karma for #{item} is #{@karma[item]}")
+  end
 end
