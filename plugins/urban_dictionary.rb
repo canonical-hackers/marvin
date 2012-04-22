@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class UrbanDictionary
   include Cinch::Plugin
   require 'nokogiri'
@@ -6,17 +7,17 @@ class UrbanDictionary
   match /ud (.*)/
 
   def execute(m, term)
-    m.reply( "Urban Dictionary .:. #{term}: #{get_def(term) || 'Definition not found'}")
+    m.reply( "Urban Dictionary ∴ #{term}: #{get_def(term) || 'Definition not found'}")
   end
- 
-  private 
+
+  private
 
   def get_def(term)
     # URI Encode
     term = URI.escape(term, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-    
+
     url = "http://www.urbandictionary.com/define.php?term=#{term}"
-    
+
     # Make sure the URL is legit
     url = URI::extract(url, ["http", "https"]).first
 
