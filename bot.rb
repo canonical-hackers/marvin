@@ -2,6 +2,7 @@ require 'cinch'
 require 'rubygems'
 require 'active_record'
 require 'yaml'
+require 'resolv-replace'
 
 # Init Active record 
 @@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
