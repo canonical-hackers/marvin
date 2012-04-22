@@ -19,7 +19,7 @@ bot = Cinch::Bot.new do
     c.nick    = 'marvin'
     c.server  = 'irc.canonical.org'
     c.channels = ["#bottest"]
-    c.plugins.plugins = [UrbanDictionary, TitleLookup, Seen, Wikipedia]
+    c.plugins.plugins = [UrbanDictionary, TitleLookup, Seen, Wikipedia, Karma]
   end
 end
 
