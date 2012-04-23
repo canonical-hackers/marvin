@@ -4,6 +4,7 @@ class Wikipedia
   require 'nokogiri'
   require 'open-uri'
   require 'ruby-bitly'
+  $commands['wikipedia'] = "Use !w <term> to see the Wikipedia info for that term."
 
   match /w (.*)/
 

@@ -2,13 +2,14 @@ require 'cinch'
 require 'rubygems'
 require 'active_record'
 require 'yaml'
-require 'ruby-bitly'
 
-# Init Active record 
-@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
+#@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
 dbconfig =     YAML::load(File.open('config/database.yml'))
 @quotes =      YAML::load(File.open('config/marvin.yml'))['quotes']
 ActiveRecord::Base.establish_connection(dbconfig)
+
+# Define an array that we can do help stuff, might be a better way to do this. 
+$commands = Hash.new('Command not found') 
 
 # Load misc files 
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file } 
@@ -34,9 +35,12 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     m.reply @quotes[rand(@quotes.length)], true
   end
 
-  helpers do
-    def shorten(url)
-      return Bitly.shorten(url, @bitlyconfig['username'], @bitlyconfig['apikey']).url
+  on :message, /^!help/ do |m|
+    command = m.message.match(/^!help (.*)/)[1] rescue nil
+    if command 
+      m.reply $commands[command], true
+    else
+      m.reply "The following help topics are available: #{$commands.keys.join(', ')}."
     end
   end
 
