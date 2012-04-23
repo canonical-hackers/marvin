@@ -27,7 +27,7 @@ class Wikipedia
     # Truncate if it's super long
     text = text[0,249] + '...' if text.length > 250
 
-    return "#{text} [#{Bitly.shorten(url, @@bitlyconfig['username'], @@bitlyconfig['apikey']).url}]"
+    return "#{text} [#{shorten(url)}]"
   end
 end
 
