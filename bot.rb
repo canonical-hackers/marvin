@@ -1,12 +1,11 @@
 require 'cinch'
 require 'rubygems'
-require 'active_record'
+#require 'active_record'
 require 'yaml'
 
 #@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
-dbconfig =     YAML::load(File.open('config/database.yml'))
-@quotes =      YAML::load(File.open('config/marvin.yml'))['quotes']
-ActiveRecord::Base.establish_connection(dbconfig)
+# dbconfig =     YAML::load(File.open('config/database.yml'))
+# ActiveRecord::Base.establish_connection(dbconfig)
 
 # Define an array that we can do help stuff, might be a better way to do this. 
 $commands = Hash.new('Command not found') 
@@ -32,6 +31,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
   end
 
   on :message, /^marvin:/ do |m|
+    @quotes = YAML::load(File.open('config/marvin.yml'))['quotes']
     m.reply @quotes[rand(@quotes.length)], true
   end
 

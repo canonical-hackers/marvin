@@ -9,7 +9,7 @@ class UrbanDictionary
   match /ud (.*)/
 
   def execute(m, term)
-    m.reply( "Urban Dictionary ∴ #{term}: #{get_def(term) || 'Definition not found'}")
+    m.reply( "Urban Dictionary ∴ #{term}: #{get_def(term)} [#{shorten("http://www.urbandictionary.com/define.php?term=#{term}")}]")
   end
 
   private
@@ -24,7 +24,10 @@ class UrbanDictionary
     url = URI::extract(url, ["http", "https"]).first
 
     # Grab the element
-    return Nokogiri::HTML(open(url)).css('.definition').first.content
+    text = Nokogiri::HTML(open(url)).css('.definition').first.content
+
+    #Make sure it's not terribly long 
+    return truncate(text, 250)
   end
 end
 

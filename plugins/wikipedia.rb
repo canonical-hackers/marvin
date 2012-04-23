@@ -26,7 +26,7 @@ class Wikipedia
     text = Nokogiri::HTML(open(url)).css('#mw-content-text p').first.content
 
     # Truncate if it's super long
-    text = text[0,249] + '...' if text.length > 250
+    truncate(text, 200) 
 
     return "#{text} [#{shorten(url)}]"
   end
