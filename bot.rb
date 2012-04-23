@@ -1,7 +1,8 @@
-require 'cinch'
-require 'rubygems'
-#require 'active_record'
+require "rubygems"
+require "bundler/setup"
 require 'yaml'
+require 'cinch'
+#require 'active_record'
 
 #@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
 # dbconfig =     YAML::load(File.open('config/database.yml'))
@@ -17,10 +18,11 @@ Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
 Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
 @bot = Cinch::Bot.new do
+  config = YAML::load(File.open('config/bot.yml'))
   configure do |c|
-    c.nick    = 'marvin'
-    c.server  = 'localhost'
-    c.channels = ["#bottest"]
+    c.nick     = config['nick']
+    c.server   = config['server']
+    c.channels = config['chans']
     c.plugins.plugins = [ Admin,
                           Dice,
                           Karma,
@@ -33,7 +35,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
   end
 
   on :message, /^marvin:/ do |m|
-    @quotes = YAML::load(File.open('config/marvin.yml'))['quotes']
+    @quotes = YAML::load(File.open('config/quotes.yml'))
     m.reply @quotes[rand(@quotes.length)], true
   end
 

@@ -1,0 +1,29 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    cinch (2.0.2)
+    happymapper (0.4.0)
+      libxml-ruby (~> 2.0)
+    libxml-ruby (2.3.2)
+    mime-types (1.18)
+    nokogiri (1.5.2)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    ruby-bitly (0.1.5)
+      rest-client (~> 1.6.1)
+    temperature (1.2)
+    time-lord (0.2.5)
+    weather-underground (1.1.1)
+      happymapper
+      rest-client
+      temperature (>= 1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cinch
+  nokogiri
+  ruby-bitly
+  time-lord
+  weather-underground

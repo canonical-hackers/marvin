@@ -1,0 +1,4 @@
+nick: marvin
+server: irc.canonical.org
+chans:
+  - \#bottest
