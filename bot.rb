@@ -23,15 +23,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.nick     = config['nick']
     c.server   = config['server']
     c.channels = config['chans']
-    c.plugins.plugins = [ Admin,
-                          Dice,
-                          Karma,
-                          Seen,
-                          TitleLookup,
-                          UrbanDictionary,
-                          Wikipedia,
-                          Weather,
-                        ]
+    c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
   end
 
   on :message, /^marvin:/ do |m|
