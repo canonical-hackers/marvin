@@ -2,7 +2,7 @@ require 'cinch'
 require 'rubygems'
 require 'active_record'
 require 'yaml'
-require 'resolv-replace'
+#require 'resolv-replace'
 
 # Init Active record 
 @@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
@@ -20,7 +20,12 @@ bot = Cinch::Bot.new do
     c.nick    = 'marvin'
     c.server  = 'irc.canonical.org'
     c.channels = ["#bottest"]
-    c.plugins.plugins = [UrbanDictionary, TitleLookup, Seen, Wikipedia, Karma]
+    c.plugins.plugins = [ Dice, 
+                          Karma, 
+                          Seen, 
+                          TitleLookup, 
+                          UrbanDictionary, 
+                          Wikipedia ]
   end
 end
 
