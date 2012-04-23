@@ -1,3 +1,3 @@
-class Nick < ActiveRecord::Base
-  
-end
+# class Nick < ActiveRecord::Base
+
+# end
