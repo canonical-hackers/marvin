@@ -6,8 +6,7 @@ class Admin
 
   match /join (.+)/, method: :join
   match /part(?: (.+))?/, method: :part
-  match /goaway(?: (.+))?/, method: :shutdown
-  match /reboot(?: (.+))?/, method: :restart
+  match /goaway/, method: :shutdown
 
   def initialize(*args)
     super
