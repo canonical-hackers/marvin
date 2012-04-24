@@ -5,7 +5,7 @@ class Dice
   class Score < Struct.new(:nick, :score, :time)
   end
 
-  $commands['roll'] = "Roll a random assortment of dice, you can use !roll (dice count)d(sides) to roll specific dice (e.g. '!roll 4d6 3d20')"
+  $commands['roll'] = "Roll a random assortment of dice with .roll, you can also use .roll (dice count)d(sides) to roll specific dice (e.g. '.roll 4d6 3d20')"
 
   match /roll$/, method: :roll_bag 
   match /roll (.*)/, method: :roll

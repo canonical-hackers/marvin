@@ -4,9 +4,10 @@ class Wikipedia
   require 'nokogiri'
   require 'open-uri'
   require 'ruby-bitly'
-  $commands['wikipedia'] = "Use !w <term> to see the Wikipedia info for that term."
+  $commands['wikipedia'] = "Use .wiki <term> to see the Wikipedia info for that term."
 
-  match /w (.*)/
+  match /wiki (.*)/
+  match /wikipedia (.*)/
 
   def execute(m, term)
     m.reply( "Wikipedia ∴ #{get_def(term) || 'Definition not found'}")
@@ -26,7 +27,9 @@ class Wikipedia
     text = Nokogiri::HTML(open(url)).css('#mw-content-text p').first.content
 
     # Truncate if it's super long
-    truncate(text, 200) 
+    debug "#{text.length}"
+    text = truncate(text, 300) 
+    debug "#{text.length}"
 
     return "#{text} [#{shorten(url)}]"
   end

@@ -3,7 +3,9 @@ class Weather
   require 'weather-underground'
   require 'time-lord'
   include Cinch::Plugin
+
   match /weather (.*)/
+  match /w (.*)/
 
   def initialize(*args)
     super

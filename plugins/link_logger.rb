@@ -11,6 +11,7 @@ class LinkLogger
   require 'open-uri'
 
   listen_to :channel
+  $commands['links'] = 'Use .links to see the last 10 links users have posted to the channel.'
   match /links/
 
   def initialize(*args)
@@ -43,6 +44,6 @@ class LinkLogger
     url = URI::extract(url, ["http", "https"]).first
 
     # Grab the element
-    return Nokogiri::HTML(open(url)).css('title').first.content
+    return Nokogiri::HTML(open(url)).css('title').first.content.strip.gsub(/\s+/, ' ')
   end
 end

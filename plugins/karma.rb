@@ -2,8 +2,10 @@ class Karma
   include Cinch::Plugin
 
   listen_to :channel
-  $commands['karma'] = 'Use !karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
+  $commands['karma'] = 'Use .karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
+
   match /karma (.+)/
+  match /k (.+)/
 
   def initialize(*args)
     super
