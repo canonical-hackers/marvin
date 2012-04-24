@@ -24,6 +24,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.nick     = config['nick']
     c.server   = config['server']
     c.channels = config['chans']
+    c.plugins.prefix   = '.'
     c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
     # Storage seems to be half baked, commenting this out till it's working.
     #c.storage.backend = Cinch::Storage::YAML
