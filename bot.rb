@@ -2,6 +2,7 @@ require "rubygems"
 require "bundler/setup"
 require 'yaml'
 require 'cinch'
+require 'cinch/storage/yaml'
 #require 'active_record'
 
 #@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
@@ -24,6 +25,10 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.server   = config['server']
     c.channels = config['chans']
     c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
+    # Storage seems to be half baked, commenting this out till it's working.
+    #c.storage.backend = Cinch::Storage::YAML
+    #c.storage.basedir = "./db/"
+    #c.storage.autosave = true
   end
 
   on :message, /^marvin:/ do |m|
