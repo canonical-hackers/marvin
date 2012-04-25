@@ -12,7 +12,7 @@ $commands = Hash.new('Command not found')
 config = YAML::load(File.open("config/#{ARGV[0] || 'bot'}.yml"))
 
 # Setup the cooldown if one is configured
-$cooldown = { :timer => config['cooldown'].to_i } if config['cooldown']
+$cooldown = { :timer => config['cooldown'] } if config['cooldown']
 
 # Load misc files
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
@@ -23,9 +23,10 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
 @bot = Cinch::Bot.new do
   configure do |c|
-    c.nick     = config['nick']
-    c.server   = config['server']
-    c.channels = config['chans']
+    c.nick         = config['nick']
+    c.server       = config['server']
+    c.channels     = config['chans']
+    c.max_messages = 1
     c.plugins.prefix   = '.'
     c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
     # Storage seems to be half baked, commenting this out till it's working.

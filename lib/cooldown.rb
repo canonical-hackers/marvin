@@ -10,16 +10,19 @@ module Cinch
 
     def cooldown_finished?(m)
       synchronize(:cooldown) do 
-        if $cooldown.key?(:time)
-          if $cooldown[:timer] < (Time.now - $cooldown[:time]).floor
-            $cooldown[:time] = Time.now
-            true
+        if $cooldown[:timer].key?(m.channel)
+          if $cooldown.key?(:time)  
+            if $cooldown[:timer][m.channel] < (Time.now - $cooldown[:time]).floor
+              $cooldown[:time] = Time.now
+              return true
+            else 
+              debug "Cooldown: #{($cooldown[:timer][m.channel] - (Time.now - $cooldown[:time]).floor}s"
+              return false
+            end
           else 
-            false
+            $cooldown[:time] = Time.now
+            return true
           end
-        else 
-          $cooldown[:time] = Time.now
-          true
         end
       end
     end
