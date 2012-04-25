@@ -2,6 +2,8 @@ class Dice
   require 'time-lord'
   include Cinch::Plugin
 
+  cooldown
+
   class Score < Struct.new(:nick, :score, :time)
   end
 

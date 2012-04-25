@@ -4,13 +4,15 @@ require 'yaml'
 require 'cinch'
 require 'cinch/storage/yaml'
 #require 'active_record'
-
-#@bitlyconfig = YAML::load(File.open('config/bitly.yml'))
 # dbconfig =     YAML::load(File.open('config/database.yml'))
 # ActiveRecord::Base.establish_connection(dbconfig)
 
 # Define an array that we can do help stuff, might be a better way to do this.
 $commands = Hash.new('Command not found')
+config = YAML::load(File.open("config/#{ARGV[0] || 'bot'}.yml"))
+
+# Setup the cooldown if one is configured
+$cooldown = { :timer => config['cooldown'].to_i } if config['cooldown']
 
 # Load misc files
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
@@ -18,8 +20,8 @@ Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
 # Load Plugins
 Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
+
 @bot = Cinch::Bot.new do
-  config = YAML::load(File.open('config/bot.yml'))
   configure do |c|
     c.nick     = config['nick']
     c.server   = config['server']
@@ -37,15 +39,14 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     m.reply @quotes[rand(@quotes.length)], true
   end
 
-  on :message, /^!help/ do |m|
-    command = m.message.match(/^!help (.*)/)[1] rescue nil
+  on :message, /^.help/ do |m|
+    command = m.message.match(/^.help (.*)/)[1] rescue nil
     if command
       m.reply $commands[command], true
     else
       m.reply "The following help topics are available: #{$commands.keys.join(', ')}."
     end
   end
-
 end
 
 @bot.start

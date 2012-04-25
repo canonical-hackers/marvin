@@ -3,6 +3,8 @@ class Dickbag
   #   I do not reccommend using this plugin. Ever. People will be offended at the very least. 
 
   include Cinch::Plugin
+
+  cooldown
     
   def initialize(*args)
     super

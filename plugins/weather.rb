@@ -4,6 +4,8 @@ class Weather
   require 'time-lord'
   include Cinch::Plugin
 
+  cooldown
+
   match /weather (.*)/
   match /w (.*)/
 

@@ -5,6 +5,7 @@ class UrbanDictionary
   require 'open-uri'
   $commands['urbandictionary'] = "Use .ud <term> to see the Urban Dictionary definition for that term."
 
+  cooldown
 
   match /ud (.*)/
 
