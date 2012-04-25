@@ -2,7 +2,7 @@ module Cinch
   module Plugin
     module ClassMethods
       def cooldown
-        if !$cooldown.nil? && $cooldown.key?(:timer)
+        if !$cooldown.nil? && $cooldown.key?(:config)
           hook(:pre, :for => [:match], :method => lambda {|m| cooldown_finished?(m)})
         end
       end
@@ -10,13 +10,13 @@ module Cinch
 
     def cooldown_finished?(m)
       synchronize(:cooldown) do 
-        if $cooldown[:timer].key?(m.channel)
+        if $cooldown[:config].key?(m.channel)
           if $cooldown.key?(:time)  
-            if $cooldown[:timer][m.channel] < (Time.now - $cooldown[:time]).floor
+            if $cooldown[:config][m.channel] < (Time.now - $cooldown[:time]).floor
               $cooldown[:time] = Time.now
               return true
             else 
-              debug "Cooldown: #{($cooldown[:timer][m.channel] - (Time.now - $cooldown[:time])).floor}s"
+              debug "Cooldown: #{($cooldown[:config][m.channel] - (Time.now - $cooldown[:time])).floor}s"
               return false
             end
           else 
