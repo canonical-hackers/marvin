@@ -34,11 +34,6 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     #c.storage.autosave = true
   end
 
-  on :channel, /^marvin:/ do |m|
-    @quotes = YAML::load(File.open('config/quotes.yml'))
-    m.reply @quotes[rand(@quotes.length)], true
-  end
-
   on :channel, /^.help/ do |m|
     command = m.message.match(/^.help (.*)/)[1] rescue nil
     if command
