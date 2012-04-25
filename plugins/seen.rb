@@ -1,8 +1,9 @@
 class Seen
+  require 'time-lord'
   include Cinch::Plugin
 
   listen_to :channel
-  help = "Use .seen <name> to see the last time that nick was active."
+  self.help = "Use .seen <name> to see the last time that nick was active."
   
   match /seen (.+)/
 
@@ -17,7 +18,7 @@ class Seen
 
   def execute(m, nick)
     if @seen[nick.downcase]
-      m.reply("I last saw #{nick} #{@seen[nick.downcase].strftime("%b %e @ %H:%M")}", true)
+      m.reply("I last saw #{nick} #{@seen[nick.downcase].ago_in_words}", true)
     else
       m.reply("I've never seen #{nick} before, sorry!", true)
     end

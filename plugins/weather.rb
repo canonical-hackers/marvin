@@ -5,6 +5,7 @@ class Weather
   include Cinch::Plugin
 
   cooldown
+  self.help = "Use .w <location> to see information on the weather. (e.g. .w 94062)"
 
   match /weather (.*)/
   match /w (.*)/

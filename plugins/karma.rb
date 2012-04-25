@@ -2,7 +2,7 @@ class Karma
   include Cinch::Plugin
 
   listen_to :channel
-  help = 'Use .karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
+  self.help = 'Use .karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
   cooldown
 
 

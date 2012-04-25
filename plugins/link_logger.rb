@@ -11,7 +11,7 @@ class LinkLogger
   require 'open-uri'
 
   listen_to :channel
-  help = 'Use .links to see the last 10 links users have posted to the channel.'
+  self.help = 'Use .links to see the last 10 links users have posted to the channel.'
   match /links/
 
   def initialize(*args)

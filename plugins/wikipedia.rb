@@ -6,7 +6,7 @@ class Wikipedia
   require 'ruby-bitly'
 
   cooldown
-  help = "Use .wiki <term> to see the Wikipedia info for that term."
+  self.help = "Use .wiki <term> to see the Wikipedia info for that term."
 
   match /wiki (.*)/
   match /wikipedia (.*)/

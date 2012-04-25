@@ -5,7 +5,7 @@ class UrbanDictionary
   require 'open-uri'
 
   cooldown
-  help = "Use .ud <term> to see the Urban Dictionary definition for that term."
+  self.help = "Use .ud <term> to see the Urban Dictionary definition for that term."
   match /ud (.*)/
 
   def execute(m, term)

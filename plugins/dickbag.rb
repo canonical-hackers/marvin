@@ -11,6 +11,7 @@ class Dickbag
     @owner = {} 
   end
 
+  self.help = "Use .dickbag to get the bag, I don't really want to know why you want it so bad."
   listen_to :channel
 
   set(:prefix => '') 
