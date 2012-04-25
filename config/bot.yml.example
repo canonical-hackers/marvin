@@ -1,7 +1,9 @@
 nick: marvin
 server: irc.canonical.org
+cooldowns:
+  '#bottest': 30
 chans:
-  - #bottest
+  - '#bottest'
 plugins:
   - Admin
   - Dice

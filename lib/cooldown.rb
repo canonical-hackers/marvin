@@ -16,7 +16,7 @@ module Cinch
               $cooldown[:time] = Time.now
               return true
             else 
-              debug "Cooldown: #{($cooldown[:timer][m.channel] - (Time.now - $cooldown[:time]).floor}s"
+              debug "Cooldown: #{($cooldown[:timer][m.channel] - (Time.now - $cooldown[:time])).floor}s"
               return false
             end
           else 

@@ -12,7 +12,7 @@ $commands = Hash.new('Command not found')
 config = YAML::load(File.open("config/#{ARGV[0] || 'bot'}.yml"))
 
 # Setup the cooldown if one is configured
-$cooldown = { :timer => config['cooldown'] } if config['cooldown']
+$cooldown = { :timer => config['cooldowns'] } if config['cooldowns']
 
 # Load misc files
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
