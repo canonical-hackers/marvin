@@ -2,7 +2,7 @@
 class LinkLogger
   class Link < Struct.new(:link, :nick, :title, :short_url, :time)
     def to_s 
-      "#{short_url} - #{title.gsub(/\n/, '')}"
+      "#{short_url} ∴ #{title} (#{time.ago_in_words})"
     end 
   end
 
@@ -20,18 +20,21 @@ class LinkLogger
   end
 
   def execute(m)
-    m.user.send "Recent Links in #{m.channel}", true
-    top10 = @history.values.sort {|a,b| a[:time] <=> b[:time] }
-    top10.each_with_index { |link, i| m.channel.send "#{i + 1}. #{link}", true }  
+    m.user.send "Recent Links in #{m.channel}"
+    top10 = @history.values.sort {|a,b| b[:time] <=> a[:time] }
+    top10[0,10].each_with_index { |link, i| m.user.send "#{i + 1}. #{link}" }  
   end
 
   def listen(m)
     urls = URI.extract(m.message, ["http", "https"])
     urls.each do |url|
-      short_url = shorten(url)
-      title = get_title(url).gsub(/\n/, '') || 'Untitled'
-      m.reply("#{short_url} ∴  #{title}")
-      unless @history.key?(url)
+      if @history.key?(url)
+        m.reply("#{@history[url].short_url} ∴  #{@history[url].title}")
+        m.reply "That was already linked by #{@history[url].nick} #{@history[url].time.ago_in_words}.", true
+      else   
+        short_url = shorten(url)
+        title = get_title(url).gsub(/\n/, '') || 'Untitled'
+        m.reply("#{short_url} ∴  #{title}")
         @history[url] = Link.new(url, m.user.nick, title, short_url, Time.now)
       end
     end
