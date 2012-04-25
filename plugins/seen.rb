@@ -1,8 +1,9 @@
 class Seen
   include Cinch::Plugin
-  $commands['seen'] = "Use .seen <name> to see the last time that nick was active."
 
   listen_to :channel
+  help = "Use .seen <name> to see the last time that nick was active."
+  
   match /seen (.+)/
 
   def initialize(*args)

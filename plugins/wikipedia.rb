@@ -6,8 +6,7 @@ class Wikipedia
   require 'ruby-bitly'
 
   cooldown
-
-  $commands['wikipedia'] = "Use .wiki <term> to see the Wikipedia info for that term."
+  help = "Use .wiki <term> to see the Wikipedia info for that term."
 
   match /wiki (.*)/
   match /wikipedia (.*)/

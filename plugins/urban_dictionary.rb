@@ -3,10 +3,9 @@ class UrbanDictionary
   include Cinch::Plugin
   require 'nokogiri'
   require 'open-uri'
-  $commands['urbandictionary'] = "Use .ud <term> to see the Urban Dictionary definition for that term."
 
   cooldown
-
+  help = "Use .ud <term> to see the Urban Dictionary definition for that term."
   match /ud (.*)/
 
   def execute(m, term)
