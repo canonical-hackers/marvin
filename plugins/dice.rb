@@ -9,7 +9,7 @@ class Dice
 
   $commands['roll'] = "Roll a random assortment of dice with .roll, you can also use .roll (dice count)d(sides) to roll specific dice (e.g. '.roll 4d6 3d20')"
 
-  match /roll$/, method: :roll_bag 
+  match /dicebag/, method: :roll_bag 
   match /roll (.*)/, method: :roll
 
   def initialize(*args)
@@ -19,9 +19,26 @@ class Dice
 
   def roll_bag(m) 
     nick = m.user.nick.downcase
-    bag = "#{rand(30)}d6 #{rand(25)}d10 #{rand(20)}d20" 
+    dice = [rand(30), rand(25), rand(20)].map { |d| d.floor } 
+    bag = "#{dice[0]}d6 #{dice[1]}d10 #{dice[2]}d20" 
     result = roll_dice(bag) 
-    m.reply "#{nick} rolls a huge bag of dice totalling #{result[:total]}."
+    
+    total = dice.inject(:+)
+    if total < 10 && total > 0
+      size = 'tiny'
+    elsif total < 20 && total > 10 
+      size = 'small'
+    elsif total < 30 && total > 20
+      size = 'medium'
+    elsif total < 50 && total > 30
+      size = 'large'
+    elsif total < 60 && total > 50
+      size = 'hefty' 
+    else
+      size = 'huge'
+    end
+
+    m.reply "#{m.user.nick} rolls a #{size} bag of dice totalling #{result[:total]}."
     if @scores.key?(nick)
       if @scores[nick].score < result[:total]
         m.reply "This is a new high score, their old score was #{@scores[nick].score}, #{@scores[nick].time.ago_in_words}"
@@ -67,9 +84,8 @@ class Dice
     unless sides < 1 || count < 1 
       rolls = []
       count.times { rolls << rand(sides) + 1 } 
-      
       return {:total => rolls.inject(:+), 
-              :text => "#{count}d#{sides} [#{rolls.join(',')}]" }  
+              :text => "#{count}d#{sides}" }  
     end 
   end
 end
