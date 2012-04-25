@@ -12,16 +12,20 @@ class Dickbag
   end
 
   listen_to :channel
-  match /dickbag$/, method: :steal
-  match /dickbag info/, method: :info    
+
+  set(:prefix => '') 
+
+  match /^[!\.]dickbag$/, method: :steal
+  match /^dickbag info/, method: :info    
 
   def listen(m)
-    if m.user.nick == @owner[:nick] && m.action_message.match(/the\sbag\sof\sdicks/)
-      case m.action_message.match(/(\S+)\sthe\sbag\sof\sdicks/)[1]
-      when 'eats'
+    
+    if m.user.nick == @owner[:nick] && m.action_message && m.action_message.match(/the\sbag\sof\sdicks/)
+      action = m.action_message.match(/(\S+)\sthe\sbag\sof\sdicks/)[1]
+      if action.match(/noms/)
         m.channel.action "recoils in horror as #{@owner[:nick]} gobbles down the bag of dicks!"
         @owner = {}
-      when 'hides'
+      elsif action.match(/hides/)
         m.channel.action "looks confused as #{@owner[:nick]} hides the bag of dicks in their pants."
       end  
     end
@@ -32,7 +36,7 @@ class Dickbag
       if @owner[:nick] == m.user.nick
         m.reply "you still have the bag of dicks, chill the fuck out.", true
       else 
-        m.channel.action "reaches over to #{@owner[:nick]} steals the bag and hands it to #{m.user.nick}"
+        m.channel.action "reaches over to #{@owner[:nick]} takes the bag of dicks, and hands it to #{m.user.nick}"
         @owner = {:nick => m.user.nick, :time => Time.now, :times_passed => @owner[:times_passed] + 1 } 
       end 
     else 
@@ -45,7 +49,7 @@ class Dickbag
     if @owner.key?(:nick)
       message = "#{@owner[:nick]} is currently holding the bag of dicks, they stole it #{@owner[:time].ago_in_words}"
       if @owner[:times_passed] > 0 
-        message += "and #{@owner[:times_passed]} other people have had their filthy hands all over them."
+        message += " and #{@owner[:times_passed]} other people have had their filthy hands all over them."
       else 
         message += '.'
       end 
