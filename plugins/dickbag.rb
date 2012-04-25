@@ -16,7 +16,7 @@ class Dickbag
   set(:prefix => '') 
 
   match /^[!\.]dickbag$/, method: :steal
-  match /^dickbag info/, method: :info    
+  match /^[!\.]dickbag info/, method: :info    
 
   def listen(m)
     
