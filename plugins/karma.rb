@@ -5,28 +5,46 @@ class Karma
   self.help = 'Use .karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
   cooldown
 
-
   match /karma (.+)/
   match /k (.+)/
 
   def initialize(*args)
     super
-    @karma = Hash.new(0)
+    @storage = Storage.new('yaml/karma.yml')
   end
 
   def listen(m)
-    add = m.message.scan(/(\S+)\+\+/).map { |k| k.first }
-    add.each do |k|
-      @karma[k] += 1
-    end
+    if m.message.match(/(\S+)[\+\-]{2}/) 
+      
+      channel = m.channel.name  
+      @storage.data[channel] = Hash.new unless @storage.data.key?(channel) 
+      
+      add = m.message.scan(/(\S+)\+\+/).map { |k| k.first }
+      add.each do |k|
+        @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
+        @storage.data[channel][k] += 1
+      end
 
-    sub = m.message.scan(/(\S+)\-\-/).map { |k| k.first }
-    sub.each do |k|
-      @karma[k] -= 1
+      sub = m.message.scan(/(\S+)\-\-/).map { |k| k.first }
+      sub.each do |k|
+        @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
+        @storage.data[channel][k] -= 1
+      end
+
+      if add || sub
+        debug "Data : #{@storage.data}"
+        synchronize(:karma_save) do 
+          @storage.save
+        end
+      end 
     end
   end
 
   def execute(m, item)
-    m.reply("Karma for #{item} is #{@karma[item]}")
+    m.reply("Karma for #{item} is #{@storage.data[m.channel][item]}")
   end
+
+  private 
+
+
 end
