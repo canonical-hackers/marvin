@@ -6,6 +6,11 @@ class Dice
   self.help = "Roll a random assortment of dice with .dicebag, you can also use .roll (dice count)d(sides) to roll specific dice (e.g. '.roll 4d6 3d20')"
 
   class Score < Struct.new(:nick, :score, :time)
+    def to_yaml
+      { :nick => nick,
+        :score => score,
+        :time => time } 
+    end
   end
 
   match /dicebag/, method: :roll_bag 
@@ -13,7 +18,7 @@ class Dice
 
   def initialize(*args)
     super
-    @scores = {}
+    @storage = Storage.new('yaml/dice.yml')
   end
 
   def roll_bag(m) 
@@ -38,14 +43,28 @@ class Dice
     end
 
     m.reply "#{m.user.nick} rolls a #{size} bag of dice totalling #{result[:total]}."
-    if @scores.key?(nick)
-      if @scores[nick].score < result[:total]
-        m.reply "This is a new high score, their old score was #{@scores[nick].score}, #{@scores[nick].time.ago_in_words}"
-        @scores[m.user.nick.downcase] = Score.new(m.user.nick, result[:total], Time.now)
-      end
-    else 
-      @scores[m.user.nick.downcase] = Score.new(m.user.nick, result[:total], Time.now)
-    end  
+
+    channel = m.channel.name
+
+    unless @storage.data.key?(channel)
+      @storage.data[channel] = Hash.new 
+    end
+
+    unless @storage.data[channel].key?(nick) 
+      @storage.data[channel][nick] = { :score => result[:total], :time => Time.now } 
+    end   
+
+    if @storage.data[channel][nick][:score] < result[:total]
+      old = @storage.data[channel][nick]
+      @storage.data[channel][nick] = { :score => result[:total], :time => Time.now }
+
+      m.reply "This is a new high score, their old score was #{old[:score]}, #{old[:time].ago_in_words}."
+    end 
+
+    # Keep an eye on this and only do it on changes if it becomes a perf issue. 
+    synchronize(:dice_save) do 
+      @storage.save
+    end
   end
 
   def roll(m, bag) 
