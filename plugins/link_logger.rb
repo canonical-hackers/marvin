@@ -41,6 +41,12 @@ class LinkLogger
                   "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
         end
         @storage.data[:history][m.channel.name][url][:count] += 1
+      # Twitter Statuses
+      elsif tweet = url.match(/https?:\/\/mobible|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
+        debug 'TWEEEEET'
+        page = Nokogiri::HTML(open("http://mobile.twitter.com/#{tweet[1]}/status/#{tweet[2]}")).css('.status')
+        status = page.first.content.strip
+        m.reply "@#{tweet[1]}: #{status}"
       else   
         short_url = shorten(url)
         title = get_title(url)
@@ -65,19 +71,25 @@ class LinkLogger
 
   private
 
+  
+
+
   def get_title(url)
     # Make sure the URL is legit
     url = URI::extract(url, ["http", "https"]).first
 
+    # If the link is to an image, extract the filename.
     if url.match(/\.jpg|gif|png$/)
+      # unless it's from reddit, then change the url to the gallery to get the image's caption.
       if url.match(/^http:\/\/i\.imgur\.com/)
         url = "http://imgur.com/#{url.match(/([A-Za-z0-9]{5})\.jpg|gif|png$/)[1]}"
       else 
         return "Image: #{url.match(/\/([^\/]+\.jpg|gif|png)$/)[1]}"
       end
     end
-   
-    debug url
+
+    debug url 
+
     
     # Grab the element, return nothing if  the site doesn't have a title.
     page = Nokogiri::HTML(open(url)).css('title')
