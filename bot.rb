@@ -24,6 +24,8 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.max_messages = 1
     c.plugins.prefix   = '.'
     c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
+    c.plugins.options[LinkLogger][:whitelist] = config['links']['whitelist']
+    c.plugins.options[LinkLogger][:reportstats] = config['links']['reportstats']
   end
 end
 

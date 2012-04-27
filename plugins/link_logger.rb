@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class LinkLogger
   include Cinch::Plugin
+  require 'twitter'
   require 'nokogiri'
   require 'open-uri'
 
@@ -28,25 +29,43 @@ class LinkLogger
 
   def listen(m)
     urls = URI.extract(m.message, ["http", "https"])
+
+    debug urls.length.to_s
+
+    if config[:whitelist]
+      debug "Checking Whitelist! #{config[:whitelist]} urls: #{urls}"
+      urls.each do |url| 
+        unless url.match(Regexp.new("http:\/\/.*\.?#{config[:whitelist].join('|')}\."))
+          urls.delete(url)
+        end      
+      end
+    end
+
+    debug urls.length.to_s
+
     urls.each do |url|
       @storage.data[:history][m.channel.name] ||= Hash.new 
   
       if @storage.data[:history][m.channel.name].key?(url)
         link = @storage.data[:history][m.channel.name][url]
         m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?
-        if link[:count] == 1
-          m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
-        else 
-          m.reply "That was already linked #{link[:count]} times. " + 
-                  "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
+        unless config[:reportstats] == false
+          if link[:count] == 1
+            m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
+          else 
+            m.reply "That was already linked #{link[:count]} times. " + 
+                    "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
+          end
         end
         @storage.data[:history][m.channel.name][url][:count] += 1
       # Twitter Statuses
-      elsif tweet = url.match(/https?:\/\/mobible|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
-        debug 'TWEEEEET'
-        page = Nokogiri::HTML(open("http://mobile.twitter.com/#{tweet[1]}/status/#{tweet[2]}")).css('.status')
-        status = page.first.content.strip
-        m.reply "@#{tweet[1]}: #{status}"
+      elsif 
+        if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
+          status = Twitter.status(tweet[2]).text
+          m.reply "@#{tweet[1]} tweeted \"#{status}\"."
+        elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
+          m.reply "http://twitter.com/#{tweet[1]} ∴ #{tweet[1]} on Twitter"
+        end
       else   
         short_url = shorten(url)
         title = get_title(url)
@@ -70,9 +89,6 @@ class LinkLogger
   end
 
   private
-
-  
-
 
   def get_title(url)
     # Make sure the URL is legit
