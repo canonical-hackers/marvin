@@ -32,7 +32,6 @@ class Karma
       end
 
       if add || sub
-        debug "Data : #{@storage.data}"
         synchronize(:karma_save) do 
           @storage.save
         end
