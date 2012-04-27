@@ -1,4 +1,4 @@
 *~
 config/bot.yml
 config/e-bot.yml
-db/*
+yaml/*
