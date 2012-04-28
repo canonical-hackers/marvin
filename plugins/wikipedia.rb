@@ -19,9 +19,6 @@ class Wikipedia
     term = URI.escape(term, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
     url = "http://en.wikipedia.org/w/index.php?search=#{term}"
 
-    # Make sure the URL is legit
-    url = URI::extract(url, ["http", "https"]).first
-
     # Grab the text
     text = get_html_element(url, '#mw-content-text p')
 

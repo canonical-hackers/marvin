@@ -18,12 +18,8 @@ class UrbanDictionary
 
     url = "http://www.urbandictionary.com/define.php?term=#{term}"
 
-    # Make sure the URL is legit
-    url = URI::extract(url, ["http", "https"]).first
-
     # Grab the element
     text = get_html_element(url, '#mw-content-text p')
-    text = Nokogiri::HTML(open(url)).css('.definition').first.content
 
     #Make sure it's not terribly long 
     return truncate(text, 250)

@@ -3,6 +3,9 @@ require 'nokogiri'
 require 'open-uri'
 
 def get_html_element(url, selector) 
+  # Make sure the URL is legit
+  url = URI::extract(url, ["http", "https"]).first
+
   return Nokogiri::HTML(open(url)).css(selector).first.content
 end
 
