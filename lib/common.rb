@@ -1,4 +1,10 @@
 require 'ruby-bitly'
+require 'nokogiri'
+require 'open-uri'
+
+def get_html_element(url, selector) 
+  return Nokogiri::HTML(open(url)).css(selector).first.content
+end
 
 def expand(url)
   @bitlyconfig = YAML::load(File.open('config/bitly.yml'))

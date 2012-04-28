@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 class UrbanDictionary
   include Cinch::Plugin
-  require 'nokogiri'
-  require 'open-uri'
 
   cooldown
   self.help = "Use .ud <term> to see the Urban Dictionary definition for that term."
@@ -24,6 +22,7 @@ class UrbanDictionary
     url = URI::extract(url, ["http", "https"]).first
 
     # Grab the element
+    text = get_html_element(url, '#mw-content-text p')
     text = Nokogiri::HTML(open(url)).css('.definition').first.content
 
     #Make sure it's not terribly long 

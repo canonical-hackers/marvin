@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 class Wikipedia
   include Cinch::Plugin
-  require 'nokogiri'
-  require 'open-uri'
-  require 'ruby-bitly'
 
   cooldown
   self.help = "Use .wiki <term> to see the Wikipedia info for that term."
@@ -26,7 +23,7 @@ class Wikipedia
     url = URI::extract(url, ["http", "https"]).first
 
     # Grab the text
-    text = Nokogiri::HTML(open(url)).css('#mw-content-text p').first.content
+    text = get_html_element(url, '#mw-content-text p')
 
     # Truncate if it's super long
     text = truncate(text, 300) 
