@@ -30,31 +30,23 @@ class LinkLogger
   def listen(m)
     urls = URI.extract(m.message, ["http", "https"])
 
-    debug urls.length.to_s
-
-    if config[:whitelist]
-      debug "Checking Whitelist! #{config[:whitelist]} urls: #{urls}"
-      urls.each do |url| 
-        unless url.match(Regexp.new("http:\/\/.*\.?#{config[:whitelist].join('|')}\."))
-          urls.delete(url)
-        end      
-      end
-    end
-
-    debug urls.length.to_s
 
     urls.each do |url|
       @storage.data[:history][m.channel.name] ||= Hash.new 
   
       if @storage.data[:history][m.channel.name].key?(url)
         link = @storage.data[:history][m.channel.name][url]
-        m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?
-        unless config[:reportstats] == false
-          if link[:count] == 1
-            m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
-          else 
-            m.reply "That was already linked #{link[:count]} times. " + 
-                    "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
+        
+        if whitelisted?(url)
+          m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil? 
+
+          unless config[:reportstats] == false
+            if link[:count] == 1
+              m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
+            else 
+              m.reply "That was already linked #{link[:count]} times. " + 
+                      "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
+            end
           end
         end
         @storage.data[:history][m.channel.name][url][:count] += 1
@@ -71,7 +63,9 @@ class LinkLogger
         title = get_title(url)
         
         # Only spam the channel if you have a title and url.
-        m.reply("#{short_url} ∴  #{title}") if short_url && title 
+        if whitelisted?(url)
+          m.reply("#{short_url} ∴  #{title}") if short_url && title 
+        end
 
         @storage.data[:history][m.channel.name][url] = {:nick => m.user.nick, 
                                                         :title => title || nil, 
@@ -90,6 +84,17 @@ class LinkLogger
 
   private
 
+  def whitelisted?(url)
+    return true unless config[:whitelist]
+
+    debug "Checking Whitelist! #{config[:whitelist]} url: #{url}"
+
+    if url.match(Regexp.new("http:\/\/.*\.?#{config[:whitelist].join('|')}\."))
+      true 
+    end
+    false 
+  end
+
   def get_title(url)
     # Make sure the URL is legit
     url = URI::extract(url, ["http", "https"]).first
@@ -98,7 +103,9 @@ class LinkLogger
     if url.match(/\.jpg|gif|png$/)
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
       if url.match(/^http:\/\/i\.imgur\.com/)
-        url = "http://imgur.com/#{url.match(/([A-Za-z0-9]{5})\.jpg|gif|png$/)[1]}"
+        imgur_id = url.match(/([A-Za-z0-9]{5})\.jpg|gif|png$/)[1]
+        debug "IMGUR: #{imgur_id}"
+        url = "http://imgur.com/#{imgur_id}"
       else 
         return "Image: #{url.match(/\/([^\/]+\.jpg|gif|png)$/)[1]}"
       end
