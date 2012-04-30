@@ -19,7 +19,7 @@ class UrbanDictionary
     url = "http://www.urbandictionary.com/define.php?term=#{term}"
 
     # Grab the element
-    text = get_html_element(url, '#mw-content-text p')
+    text = get_html_element(url, '.definition')
 
     #Make sure it's not terribly long 
     return truncate(text, 250)
