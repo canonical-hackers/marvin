@@ -88,11 +88,9 @@ class LinkLogger
     return true unless config[:whitelist]
 
     debug "Checking Whitelist! #{config[:whitelist]} url: #{url}"
-
-    if url.match(Regexp.new("http:\/\/.*\.?#{config[:whitelist].join('|')}\."))
-      true 
-    end
-    false 
+    return true if url.match(Regexp.new("https?\/\/.*\.?#{config[:whitelist].join('|')}\."))
+       
+    return false 
   end
 
   def get_title(url)
@@ -102,7 +100,7 @@ class LinkLogger
     # If the link is to an image, extract the filename.
     if url.match(/\.jpg|gif|png$/)
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
-      if url.match(/^http:\/\/i\.imgur\.com/)
+      if url.match(/^https?:\/\/i\.imgur\.com/)
         imgur_id = url.match(/([A-Za-z0-9]{5})\.jpg|gif|png$/)[1]
         debug "IMGUR: #{imgur_id}"
         url = "http://imgur.com/#{imgur_id}"
