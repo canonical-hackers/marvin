@@ -2,11 +2,16 @@ require 'ruby-bitly'
 require 'nokogiri'
 require 'open-uri'
 
-def get_html_element(url, selector) 
+def get_html_element(url, selector, mode = 'css') 
   # Make sure the URL is legit
   url = URI::extract(url, ["http", "https"]).first
 
-  return Nokogiri::HTML(open(url)).css(selector).first.content
+  data = case mode
+    when 'css'   then Nokogiri::HTML(open(url)).css(selector).first.content
+    when 'xpath' then Nokogiri::HTML(open(url)).xpath(selector).first
+  end
+
+  return data
 end
 
 def expand(url)
