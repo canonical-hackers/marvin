@@ -9,6 +9,8 @@ class Sudo
     super
     @date_re = Regexp.new(/^(\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2})\s+/)
     @user_re = Regexp.new(/^sudo:\s+(\w+)\s+: /)
+    @sudo_re = Regexp.new(/^\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\s+\w+\s+sudo:\s+(\w+)\s+:/)
+    @results_struct = Struct.new(:date, :user, :tty, :pwd, :executed_as, :command, :success)
   end
 
   def listen(arg)
@@ -23,7 +25,7 @@ class Sudo
   end
 
   def looks_like_sudo?(line)
-    if line =~ /sudo/
+    if line.match(@sudo_re)
       true
     else
       false
@@ -31,22 +33,33 @@ class Sudo
   end
 
   def process_line(line)
-    date = line.match(@date_re)[1] || "(unknown timestamp)"
+    results = @results_struct.new
+    results.date = line.match(@date_re)[1] || "(unknown timestamp)"
     line.gsub!(@date_re, "")
 
     # remove hostname
     line.gsub!(/^\w+\s/, "")
 
     # extract user
-    user = line.match(@user_re)[1]
+    results.user = line.match(@user_re)[1]
     line.gsub!(@user_re, '')
 
-    sudo_fields = line.split(/ ; /)
+    sudo_fields = line.split(/\s+;\s+/).map {|chunk| chunk.split(/=/)[1]}
 
     if sudo_fields.length == 4
-      
+      results.tty = sudo_fields[0]
+      results.pwd = sudo_fields[1]
+      results.executed_as = sudo_fields[2]
+      results.command = sudo_fields[3]
+      results.success = true
     else
-      
+      results.success = false
+      results.tty = sudo_fields[1]
+      results.pwd = sudo_fields[2]
+      results.executed_as = sudo_fields[3]
+      results.command = sudo_fields[4]
     end
+
+    results
   end
 end
