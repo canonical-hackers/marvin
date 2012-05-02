@@ -17,10 +17,18 @@ class Sudo
     # FIX: don't hard-code the channel name here
     target = Cinch::Target.new("#bottest", bot)
 
-    File::Tail::Logfile.tail("/var/log/user.log") do |line|
+    File::Tail::Logfile.tail("/var/log/auth.log") do |line|
       if looks_like_sudo? line
-        target.msg process_line(line)
+        target.msg format_results(process_line(line.chomp))
       end
+    end
+  end
+
+  def format_results(results)
+    if results.success == true
+      "#{results.date}: #{results.user} ran (#{results.command}) as #{results.executed_as} in (#{results.pwd})"
+    else
+      "#{results.date}: #{results.user} tried to run (#{results.command}) as #{results.executed_as} in (#{results.pwd}), but failed (incorrect password?)"
     end
   end
 
