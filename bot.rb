@@ -1,5 +1,5 @@
-require "rubygems"
-require "bundler/setup"
+require 'rubygems'
+require 'bundler/setup'
 require 'yaml'
 require 'cinch'
 
@@ -22,10 +22,19 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.server       = config['server']
     c.channels     = config['chans']
     c.max_messages = 1
-    c.plugins.prefix   = '.'
+
+    # Plugins 
+    c.plugins.prefix  = '.'
     c.plugins.plugins = config['plugins'].map { |plugin| Kernel.const_get(plugin) }
-    c.plugins.options[LinkLogger][:whitelist] = config['links']['whitelist']
-    c.plugins.options[LinkLogger][:reportstats] = config['links']['reportstats']
+    
+    # Link logger config 
+    if config['links']
+      c.plugins.options[LinkLogger][:whitelist]   = config['links']['whitelist']
+      c.plugins.options[LinkLogger][:reportstats] = config['links']['reportstats']
+    end 
+
+    # 
+  
   end
 end
 
