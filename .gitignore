@@ -2,3 +2,4 @@
 config/bot.yml
 config/e-bot.yml
 yaml/*
+logs/*
