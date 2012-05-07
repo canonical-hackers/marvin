@@ -23,7 +23,7 @@ module Cinch
           return true
         end
 
-        debug "Cooldown: #{cooldown[:config][m.channel] - cooldown}s"
+        debug "Cooldown: #{$cooldown[:config][m.channel] - cooldown}s"
         return false
       end
     end
