@@ -23,19 +23,18 @@ module Cinch
       def initialize(channel, bot)
         @bot_name = bot
         @channel  = channel
-        @output   = File.open(today_log(@channel), 'a')
+        @output   = File.open(today_log, 'a')
         @mutex    = Mutex.new
         @level    = :debug
       end
 
       private
 
-      def today_log(channel)
-        "./logs/#{channel}_#{Time.now.strftime("%Y-%m-%d")}.log"
+      def today_log
+        "./logs/#{@channel}_#{Time.now.strftime("%Y-%m-%d")}.log"
       end
 
       def format_incoming(message)
-        
         nick = message.match(/^:(\S+)!/)[1] rescue 'NONICK'
         msg  = message.match(/#\S+ :(.+)$/)[1] rescue 'NOMSG'
         generic_format(nick, msg)
@@ -54,16 +53,13 @@ module Cinch
         else 
           message << "<#{nick}> #{m}"
         end
-        puts m.codepoints.first
-        puts m
-        puts message
         return message
       end
 
       def sync_logfile
-        unless @output.path == today_log(@channel)
+        unless @output.path == today_log
           @output.close
-          @output = File.open(today_log(@channel), 'a')
+          @output = File.open(today_log, 'a')
         end
       end
     end
