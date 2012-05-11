@@ -5,6 +5,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     cinch (2.0.2)
+    crack (0.1.7)
     diff-lcs (1.1.3)
     faraday (0.8.0)
       multipart-post (~> 1.1)
@@ -12,12 +13,14 @@ GEM
       tins (~> 0.3)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
+    highline (1.6.12)
     i18n (0.6.0)
     libxml-ruby (2.3.2)
     mime-types (1.18)
     multi_json (1.3.4)
     multipart-post (1.1.5)
     nokogiri (1.5.2)
+    oauth (0.4.6)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.9.0)
@@ -36,11 +39,17 @@ GEM
     temperature (1.2)
     time-lord (0.2.5)
     tins (0.4.2)
+    tumblr-rb (1.3.0)
+      highline (>= 1.5.2)
+      weary (>= 0.7.1)
     twitter (2.2.5)
       activesupport (>= 2.3.9, < 4)
       faraday (~> 0.8)
       multi_json (~> 1.3)
       simple_oauth (~> 0.1.6)
+    weary (0.7.2)
+      crack (>= 0.1.7)
+      oauth (>= 0.3.5)
     weather-underground (1.1.1)
       happymapper
       rest-client
@@ -51,11 +60,13 @@ PLATFORMS
 
 DEPENDENCIES
   cinch
+  crack (= 0.1.7)
   file-tail
   nokogiri
   rspec
   rspec-given
   ruby-bitly
   time-lord
+  tumblr-rb
   twitter
   weather-underground
