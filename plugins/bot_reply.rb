@@ -1,7 +1,6 @@
 class BotReply
   require 'yaml'
   include Cinch::Plugin
-  cooldown
 
   def initialize(*args)
     super
