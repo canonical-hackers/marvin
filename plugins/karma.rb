@@ -40,7 +40,8 @@ class Karma
   end
 
   def execute(m, item)
-    m.reply("Karma for #{item} is #{@storage.data[m.channel][item]}")
+    karma = @storage.data[m.channel][item] || 0
+    m.reply("Karma for #{item} is #{karma}")
   end
 
   private 
