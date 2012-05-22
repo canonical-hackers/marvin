@@ -42,8 +42,13 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     if conf.key?('tumblr')
       c.plugins.options[LinkLogger][:tumblr] = { :username => conf['tumblr']['username'], 
                                                  :password => conf['tumblr']['password'],  
-                                                 :group    => conf['tumblr']['group'] } 
+                                                 :group    => conf['tumblr']['group'],
+                                                 :tpass    => conf['tumblr']['tpass'] } 
     end
+  end
+
+  on :channel, /\a\.(help|status)\Z/ do |m|
+    m.reply "The following plugins are loaded: #{conf['plugins'].join(', ')}."
   end
 end
 
