@@ -19,13 +19,13 @@ class Karma
       channel = m.channel.name  
       @storage.data[channel] = Hash.new unless @storage.data.key?(channel) 
       
-      add = m.message.scan(/(\S+)\+\+/).map { |k| k.first }
+      add = m.message.scan(/(\S+)[^\-\+]\+{2}\s/).map { |k| k.first }
       add.each do |k|
         @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
         @storage.data[channel][k] += 1
       end
 
-      sub = m.message.scan(/(\S+)\-\-/).map { |k| k.first }
+      sub = m.message.scan(/(\S+)[^\-\+]\-{2}\s/).map { |k| k.first }
       sub.each do |k|
         @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
         @storage.data[channel][k] -= 1
