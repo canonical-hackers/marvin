@@ -47,8 +47,8 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     end
   end
 
-  on :channel, /\a\.(help|status)\Z/ do |m|
-    m.reply "The following plugins are loaded: #{conf['plugins'].join(', ')}."
+  on :channel, /\A\.(help|status)\z/ do |m|
+    m.reply "The following plugins are loaded: #{conf['plugins'].join(', ').downcase}. You can see their commands/usage by typing .help <plugin>."
   end
 end
 
