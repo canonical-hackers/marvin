@@ -10,12 +10,15 @@ module Cinch
           # Ensure that we're logging to the right file. 
           Array(messages).each do |message|
             next unless message.match(Regexp.new("PRIVMSG ##{@channel}"))           
+            puts 'REGEX MATCHED'
             message = format_general(message)
             message = format_message(message, event)
 
             next if message.nil?
+            puts 'MSG NOT NIL'
             sync_logfile
             @output.puts message.encode("locale", {:invalid => :replace, :undef => :replace})
+            puts 'MSG LOGGED?'
           end
         end
       end
@@ -24,6 +27,7 @@ module Cinch
         @bot_name = bot
         @channel  = channel
         @output   = File.open(today_log, 'a')
+        @output.sync = true
         @mutex    = Mutex.new
         @level    = :debug
       end
@@ -60,6 +64,7 @@ module Cinch
         unless @output.path == today_log
           @output.close
           @output = File.open(today_log, 'a')
+          @output.sync = true
         end
       end
     end
