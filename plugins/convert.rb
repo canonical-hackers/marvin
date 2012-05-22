@@ -1,6 +1,6 @@
 class Convert
   include Cinch::Plugin
-  listen_to :channel
+
   self.help = "Use .convert <thing 1> to <thing 2> to do a unit conversion. Example: .convert 5 feet to meters"
 
   match /convert (.+)/
