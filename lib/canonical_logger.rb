@@ -10,15 +10,12 @@ module Cinch
           # Ensure that we're logging to the right file. 
           Array(messages).each do |message|
             next unless message.match(Regexp.new("PRIVMSG ##{@channel}"))           
-            puts 'REGEX MATCHED'
             message = format_general(message)
             message = format_message(message, event)
 
             next if message.nil?
-            puts 'MSG NOT NIL'
             sync_logfile
             @output.puts message.encode("locale", {:invalid => :replace, :undef => :replace})
-            puts 'MSG LOGGED?'
           end
         end
       end
