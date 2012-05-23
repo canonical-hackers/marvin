@@ -11,13 +11,16 @@ class Sudo
     @user_re = Regexp.new(/^sudo:\s+(\w+)\s+: /)
     @sudo_re = Regexp.new(/^\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\s+\w+\s+sudo:\s+(\w+)\s+:/)
     @results_struct = Struct.new(:date, :user, :tty, :pwd, :executed_as, :command, :success)
+    @sudoconfig = YAML::load(File.open('config/sudo.yml'))
   end
 
   def listen(arg)
     # FIX: don't hard-code the channel name here
-    target = Cinch::Target.new("#bottest", bot)
+    channel = @sudoconfig['channel']
+    logfile = @sudoconfig['logfile']
+    target = Cinch::Target.new(channel, bot)
 
-    File::Tail::Logfile.tail("/var/log/auth.log") do |line|
+    File::Tail::Logfile.tail(logfile) do |line|
       if looks_like_sudo? line
         target.msg format_results(process_line(line.chomp))
       end

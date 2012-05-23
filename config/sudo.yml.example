@@ -1,0 +1,2 @@
+channel: '#bottest'
+logfile: '/var/log/auth.log'
