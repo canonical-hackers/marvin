@@ -40,7 +40,8 @@ class Karma
   end
 
   def execute(m, item)
-    karma = @storage.data[m.channel][item] || 0
+    @storage.data[m.channel.name] = Hash.new unless @storage.data.key?(m.channel.name)
+    karma = @storage.data[m.channel.name][item] || 0
     m.reply("Karma for #{item} is #{karma}")
   end
 
