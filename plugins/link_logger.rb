@@ -107,7 +107,7 @@ class LinkLogger
     if redit = url.match(/^https?:\/\/.*imgur\.com.*([A-Za-z0-9]{5}\.\S{3})/)
       post_image("http://i.imgur.com/#{redit[1]}", title, nick)
     # Images 
-    elsif url.match(/\.jpg|gif|png$/) 
+    elsif url.match(/\.jpg|jpeg|gif|png$/) 
       post_image(url, nil, nick)
     # Youtube / Vimeo
     elsif url.match(/https?:\/\/[^\/]*\.?(youtube|youtu|vimeo)\./) 
