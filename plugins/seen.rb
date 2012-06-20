@@ -9,18 +9,23 @@ class Seen
 
   def initialize(*args)
     super
-    @seen = {}
+    @storage = Storage.new('yaml/seen.yml')
+    @storage.data[:seen] ||= {}
   end
 
   def listen(m)
-    @seen[m.user.nick.downcase] = Time.now
+    @storage.data[:seen][m.channel.name] = {} unless @storage.data[:seen].key?(m.channel.name)
+    @storage.data[:seen][m.channel.name][m.user.nick.downcase] = Time.now
+    synchronize(:seen_save) do
+      @storage.save
+    end
   end
 
   def execute(m, nick)
-    if @seen[nick.downcase]
-      m.reply("I last saw #{nick} #{@seen[nick.downcase].ago_in_words}", true)
+    if @storage.data[:seen][m.channel.name].key?(nick.downcase)
+      m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago_in_words}", true
     else
-      m.reply("I've never seen #{nick} before, sorry!", true)
+      m.reply "I've never seen #{nick} before, sorry!", true
     end
   end
 end
