@@ -59,18 +59,17 @@ class LinkLogger
       elsif url.match(/^https?:\/\/mobile|w{3}?\.?twitter\.com/)
         twitter = {}
         if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
-          twitter[:status] = Twitter.status(tweet[2]).text
-          twitter[:user] = tweet[1]
-          reply = "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
+          unless config[:twitter] == false
+            twitter[:status] = Twitter.status(tweet[2]).text
+            twitter[:user] = tweet[1]
+            m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
+            post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>") 
+          end
         elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
-          reply = "http://twitter.com/#{tweet[1]} ∴ #{tweet[1]} on Twitter"
+          if spam_channel?(url)
+            m.reply "http://twitter.com/#{tweet[1]} ∴ #{tweet[1]} on Twitter"
+          end
         end
-
-        if spam_channel?(url) && reply
-          m.reply reply 
-        end
-        
-        post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>") 
 
       else   
         short_url = shorten(url)
