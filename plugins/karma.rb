@@ -2,7 +2,7 @@ class Karma
   include Cinch::Plugin
 
   listen_to :channel
-  self.help = 'Use .karma <item> to see the karma level for <item>. You can use <item>++ or <item>-- to alter karma for an item'
+  self.help = 'Use .karma <item> to see it\'s karma level. You can use <item>++ or <item>-- [or (something with spaces)++] to alter karma for an item'
   cooldown
 
   match /karma (.+)/
@@ -14,28 +14,35 @@ class Karma
   end
 
   def listen(m)
-    if m.message.match(/(\S+)[\+\-]{2}/) 
+    if m.message.match(/\S+[\+\-]{2}/) 
       
       channel = m.channel.name  
       @storage.data[channel] = Hash.new unless @storage.data.key?(channel) 
+      updated = false 
       
-      add = m.message.scan(/(\S+)[^\-\+]\+{2}\s/).map { |k| k.first }
-      add.each do |k|
-        @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
-        @storage.data[channel][k] += 1
-      end
+      m.message.scan(/.*?((\w+)|\((.+?)\))(\+\+|--)(\s|\z)/).each do |karma|
+        debug "#{karma}"
+        if karma[0]
+          item = karma[1] || karma[2]
+          @storage.data[channel][item] = 0 unless @storage.data[channel].key?(item)
 
-      sub = m.message.scan(/(\S+)[^\-\+]\-{2}\s/).map { |k| k.first }
-      sub.each do |k|
-        @storage.data[channel][k] = 0 unless @storage.data[channel].key?(k)
-        @storage.data[channel][k] -= 1
+          if karma[3] == '++'
+            @storage.data[channel][item] += 1
+            updated = true
+          elsif karma[3] == '--'
+            @storage.data[channel][item] -= 1
+            updated = true
+          else 
+            debug 'something went wrong matching karma!'
+          end
+        end
       end
-
-      if add || sub
+      
+      if updated
         synchronize(:karma_save) do 
           @storage.save
         end
-      end 
+      end
     end
   end
 
@@ -44,8 +51,4 @@ class Karma
     karma = @storage.data[m.channel.name][item] || 0
     m.reply("Karma for #{item} is #{karma}")
   end
-
-  private 
-
-
 end
