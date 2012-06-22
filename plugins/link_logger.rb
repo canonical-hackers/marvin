@@ -17,13 +17,19 @@ class LinkLogger
   end
 
   def execute(m)
-    top10 = @storage.data[:history][m.channel.name].values.sort {|a,b| b[:time] <=> a[:time] }
-    m.user.send "Recent Links in #{m.channel}"
-    top10[0,10].each_with_index do |link, i|
-      if link[:title].nil? 
-        m.user.send "#{i + 1}. #{expand(link[:short_url])}"
-      else 
-        m.user.send "#{i + 1}. #{link[:short_url]} ∴ #{link[:title]}"  
+    if config[:tumblr]
+      msg = "Links are available @ http://#{config[:tumblr][:group]}"
+      msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
+      m.user.send msg
+    else 
+      top10 = @storage.data[:history][m.channel.name].values.sort {|a,b| b[:time] <=> a[:time] }
+      m.user.send "Recent Links in #{m.channel}"
+      top10[0,10].each_with_index do |link, i|
+        if link[:title].nil? 
+          m.user.send "#{i + 1}. #{expand(link[:short_url])}"
+        else 
+          m.user.send "#{i + 1}. #{link[:short_url]} ∴ #{link[:title]}"  
+        end
       end
     end
   end
@@ -39,7 +45,7 @@ class LinkLogger
         if spam_channel?(url)
           m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?  
 
-          unless config[:reportstats] == false
+          unless config[:reportstats] == false || link[:nick] == m.user.nick
             if link[:count] == 1
               m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
             else 
@@ -50,19 +56,27 @@ class LinkLogger
         end
         @storage.data[:history][m.channel.name][url][:count] += 1
       # Twitter Statuses
-      elsif 
-        if spam_channel?(url)  
-          if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
-            status = Twitter.status(tweet[2]).text
-            m.reply "@#{tweet[1]} tweeted \"#{status}\"."
-          elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
+      elsif url.match(/^https?:\/\/mobile|w{3}?\.?twitter\.com/)
+        twitter = {}
+        if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
+          unless config[:twitter] == false
+            twitter[:status] = Twitter.status(tweet[2]).text
+            twitter[:user] = tweet[1]
+            m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
+            post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>") 
+          end
+        elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
+          if spam_channel?(url)
             m.reply "http://twitter.com/#{tweet[1]} ∴ #{tweet[1]} on Twitter"
           end
         end
+
       else   
         short_url = shorten(url)
         title = get_title(url)
-        
+       
+        tumble(url, title, m.user.nick) if config[:tumblr]
+
         # Only spam the channel if you have a title and url.
         if spam_channel?(url)
           m.reply("#{short_url} ∴  #{title}") if short_url && title 
@@ -85,6 +99,66 @@ class LinkLogger
 
   private
 
+  def tumble(url, title, nick)
+    return unless config[:tumblr]
+    
+    # Redit 
+    if redit = url.match(/^https?:\/\/.*imgur\.com.*([A-Za-z0-9]{5}\.\S{3})/)
+      post_image("http://i.imgur.com/#{redit[1]}", title, nick)
+    # Images 
+    elsif url.match(/\.jpg|jpeg|gif|png$/) 
+      post_image(url, nil, nick)
+    # Youtube / Vimeo
+    elsif url.match(/https?:\/\/[^\/]*\.?(youtube|youtu|vimeo)\./) 
+      post_video(url, nil, nick)
+    # Everything else 
+    else 
+      post_link(url, title, nick)
+    end
+  end
+  
+  def post_link(url, title = nil, nick = nil) 
+    document = tumblr_header('link', {'name' => title, 'tags' => nick}) 
+    document << url
+    tublr_post(document)
+  end
+
+  def post_quote(quote, source, nick = nil)
+    document = tumblr_header('quote', {'source' => source, 'tags' => nick})
+    document << quote
+    tublr_post(document)
+  end
+
+  def post_image(url, title = nil, nick = nil)
+    document = tumblr_header('regular', {'title' => title, 'tags' => nick}) 
+    document << "<p><a href='#{url}'><img src='#{url}' width='500'></a><br/><a href='#{url}'>#{url}</a></p>"
+    tublr_post(document)
+  end
+
+  def post_video(url, title, nick = nil)
+    document = tumblr_header('video', {'caption' => title, 'tags' => nick})
+    document << url 
+    tublr_post(document)
+  end
+
+  def tumblr_header(type = 'regular', options = {})
+    opts = {'type' => type, 'group' => config[:tumblr][:group]}.update(options)
+    doc = YAML::dump(opts)
+    doc << "---\n"
+    return doc
+  end 
+
+  def tublr_post(doc)
+    request = Tumblr.new(config[:tumblr][:username], config[:tumblr][:password]).post(doc)
+    request.perform do |response|
+      if response.success?
+        debug "Success"
+      else
+        debug "Something went wrong  #{response.code} #{response.message}"
+      end
+    end
+  end
+
   def spam_channel?(url) 
     whitelisted?(url) && !logonly?
   end
@@ -104,11 +178,11 @@ class LinkLogger
 
     # If the link is to an image, extract the filename.
     if url.match(/\.jpg|gif|png$/)
-      post_image(url) if config[:tumblr]
+      debug url 
       
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
-      if url.match(/^https?:\/\/i\.imgur\.com/)
-        imgur_id = url.match(/([A-Za-z0-9]{5})\.jpg|gif|png$/)[1]
+      if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|png|gif)/)
+        imgur_id = url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|png|gif)/)[1]
         url = "http://imgur.com/#{imgur_id}"
       else 
         return "Image: #{url.match(/\/([^\/]+\.jpg|gif|png)$/)[1]}"
@@ -116,24 +190,11 @@ class LinkLogger
     end
 
     # Grab the element, return nothing if  the site doesn't have a title.
+    debug url 
     page = Nokogiri::HTML(open(url)).css('title')
     return page.first.content.strip.gsub(/\s+/, ' ') unless page.empty?
   end
 
-  def post_image(url)
-    document = YAML::dump({'type' => 'regular', 'group' => config[:tumblr][:group]})
-    document << "---\n"
-    document << "<p><img src='#{url}' width='500'><br/><a href='#{url}'>#{url}</a></p>"
-    puts document
-    request = Tumblr.new(config[:tumblr][:username], config[:tumblr][:password]).post(document)
-    request.perform do |response|
-      if response.success?
-        debug "Success"
-      else
-        debug "Something went wrong  #{response.code} #{response.message}"
-      end
-    end
-  end
 
   def logonly? 
     return false if config[:logonly].nil?

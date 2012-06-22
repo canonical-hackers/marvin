@@ -23,7 +23,10 @@ module Cinch
           return true
         end
 
-        debug "Cooldown: #{$cooldown[:config][m.channel] - cooldown}s"
+        time_left = $cooldown[:config][m.channel] - cooldown
+        debug "Cooldown: #{time_left}s"
+
+        m.user.notice "Sorry, you'll have to wait #{time_left} more seconds before I can talk in the channel again."
         return false
       end
     end

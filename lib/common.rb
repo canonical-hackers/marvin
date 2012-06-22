@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'ruby-bitly'
 require 'nokogiri'
 require 'open-uri'
@@ -44,6 +45,7 @@ def shorten(url)
 end
 
 def truncate(text, length = 250) 
+  text = text.gsub(/\n/, ' · ')
   if text.length > length 
     text = text[0,length - 1] + '...'
   end

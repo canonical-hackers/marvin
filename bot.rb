@@ -34,6 +34,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     # Link logger config 
     if conf.key?('links')
       c.plugins.options[LinkLogger][:logonly]     = conf['links']['logonly']
+      c.plugins.options[LinkLogger][:twitter]     = conf['links']['twitter']
       c.plugins.options[LinkLogger][:whitelist]   = conf['links']['whitelist']
       c.plugins.options[LinkLogger][:reportstats] = conf['links']['reportstats']
     end 
