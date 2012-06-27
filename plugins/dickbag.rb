@@ -1,6 +1,9 @@
 class Dickbag
-  # This plugin is a recurring injoke in a specific open minded close knit IRC Channel. 
-  #   I do not reccommend using this plugin. Ever. People will be offended at the very least. 
+  # This plugin is a recurring injoke in a specific open-minded and close-knit IRC Channel about a 
+  #   bag of takeout food from a burger joint called Dicks. I recreated this plugin to mimic the 
+  #   behavior of an older IRC bot.
+  #
+  #   I do not reccommend using this plugin. Ever. People will be offended at the _very_ least. :)
 
   include Cinch::Plugin
 
@@ -13,7 +16,7 @@ class Dickbag
     @storage.data[:stats]   ||= Hash.new
   end
 
-  self.help = "Use .dickbag to get the bag, I don't really want to know why you want it so bad."
+  self.help = "Use .dickbag to get the bag, you know you want some tasty, tasty Dicks."
   listen_to :channel
 
   set(:prefix => '') 
@@ -29,10 +32,12 @@ class Dickbag
        m.action_message.match(/(bag of dicks|dickbag)/)
       action = m.action_message.match(/^(.*) dickbag/)[1]
       if action.match(/noms/)
-        @storage.data[:dickbag][:last] = {:action => 'nom', :nick => @storage.data[:dickbag][:current][:nick]}  
+        @storage.data[:dickbag][:last] = {:action => 'nom', :nick => m.user.nick}  
+        add_stats(m.user.nick, 0, @storage.data[:dickbag][:current][:time])
         @storage.data[:dickbag][:current] = Hash.new
       elsif action.match(/hides/)
-        @storage.data[:dickbag][:last] = {:action => 'hid', :nick => @storage.data[:dickbag][:current][:nick]}  
+        @storage.data[:dickbag][:last] = {:action => 'hid', :nick => m.user.nick}  
+        add_stats(m.user.nick, 0, @storage.data[:dickbag][:current][:time])
         @storage.data[:dickbag][:current] = Hash.new 
       end  
 
@@ -45,27 +50,30 @@ class Dickbag
   def dickbag(m)
     if @storage.data[:dickbag][:current].key?(:nick)
       if @storage.data[:dickbag][:current][:nick] == m.user.nick
-        m.reply "you still have the bag of dicks. Chill the fuck out.", true
+        m.reply db_message('same_user'), true
       else 
-        m.channel.action "reaches over to #{@storage.data[:dickbag][:current][:nick]}, takes the bag of dicks, and hands it to #{m.user.nick}"
+        m.channel.action db_message('new_owner', {:new => m.user.nick,
+                                                  :old => @storage.data[:dickbag][:current][:nick]})
+        add_stats(@storage.data[:dickbag][:current][:nick], 0, @storage.data[:dickbag][:current][:time])
         @storage.data[:dickbag][:current] = {:nick => m.user.nick, :time => Time.now, 
                               :times_passed => @storage.data[:dickbag][:current][:times_passed] + 1 } 
-        add_dick(m.user.nick)
+        add_stats(m.user.nick, 1)
       end   
     elsif @storage.data[:dickbag].key?(:last)
       if @storage.data[:dickbag][:last][:action] == 'nom'
-        m.channel.action "grabs a new bag of dicks for #{m.user.nick} since #{@storage.data[:dickbag][:last][:nick]} went all nomnomonom on the last one."
+        m.channel.action db_message('nom', {:new => m.user.nick,
+                                            :old => @storage.data[:dickbag][:last][:nick]})
         @storage.data[:dickbag][:current] = {:nick => m.user.nick, :time => Time.now, :times_passed => 0 }
       elsif @storage.data[:dickbag][:last][:action] == 'hid'
-        m.channel.action "grabs a new bag of dicks for #{m.user.nick} since the last one seems to have vanished."
+        m.channel.action db_message('hid', {:new => m.user.nick}) 
         @storage.data[:dickbag][:current] = {:nick => m.user.nick, :time => Time.now, :times_passed => 0 }
       end  
       @storage.data[:dickbag][:last] = {} 
-      add_dick(m.user.nick)
+      add_stats(m.user.nick, 1)
     else  
-      m.channel.action "reaches down and grabs a new bag of dicks and hands it to #{m.user.nick}"
+      m.channel.action db_message('new', {:new => m.user.nick})
       @storage.data[:dickbag][:current] = {:nick => m.user.nick, :time => Time.now, :times_passed => 0 }
-      add_dick(m.user.nick)
+      add_stats(m.user.nick, 1)
     end
 
     synchronize(:save_dickbag) do
@@ -83,9 +91,24 @@ class Dickbag
       end 
 
       unless @storage.data[:dickbag][:current][:times_passed] == 0
-        message << " and #{@storage.data[:dickbag][:current][:times_passed]} other people have had their filthy hands all over them"
+        message << " and it's been shared by #{@storage.data[:dickbag][:current][:times_passed]} other people"
       end
+      
+      top = get_top_users
 
+      unless top.nil?
+        if top.key?(:count) && top.key?(:time) && top[:count][:nick] == top[:time][:nick]
+          message << ". #{top[:count][:nick].capitalize} seems to love Dicks because they've held " + 
+                     "on to them more times and for longer than anyone else" 
+        elsif top.key?(:count) && top.key?(:time)
+          message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}, " + 
+                     "while #{top[:time][:nick]} has held them for the longest time at #{(top[:time][:number] / 60).round} mins"
+        elsif top.key?(:count)
+          message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}"
+        elsif top.key?(:time)
+          message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{(top[:time][:number] / 60).round} mins"
+        end 
+      end
       message << '.'
     else
       message = "no one seems to want my bag of dicks :("
@@ -93,11 +116,35 @@ class Dickbag
     m.reply message, true
   end
 
-  def add_dick(user)
-    if @storage.data[:stats].key?(user)
-      @storage.data[:stats][user] += 1
-    else
-      @storage.data[:stats][user] = 1
+  def add_stats(user, count, time = nil)
+    unless @storage.data[:stats].key?(user)
+      @storage.data[:stats][user] = { :count => 0, :time => 0 } 
+    end
+
+    @storage.data[:stats][user][:count] += count
+    @storage.data[:stats][user][:time]  += (Time.now - time) unless time.nil?
+  end
+ 
+  def get_top_users
+    counts = @storage.data[:stats].sort {|a,b| b[1][:count] <=> a[1][:count] }
+    times = @storage.data[:stats].sort {|a,b| b[1][:time] <=> a[1][:time] }
+    { :count => { :nick => counts.first[0], :number => counts.first[1][:count] },
+      :time  => { :nick => times.first[0],  :number => times.first[1][:time] }}
+  end
+  
+  def db_message(event, data = nil)
+    case event
+    when 'same_user'
+      'you still have the bag of dicks. Chill the fuck out.'
+    when 'new_owner'
+      "reaches over to #{data[:old]}, takes the bag of dicks, and hands it to #{data[:new]}"
+    when 'nom'
+      "grabs a new bag of dicks for #{data[:new]} since #{data[:old]} went all nomnomonom on the last one."
+    when 'hid'
+      "grabs a new bag of dicks for #{data[:new]} since the last one seems to have vanished."
+    when 'new'
+      "reaches down and grabs a new bag of dicks and hands it to #{data[:new]}"
     end
   end
+
 end
