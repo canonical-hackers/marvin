@@ -19,14 +19,16 @@ class PaxTimer
   end
 
   def east(m)
-    days = (@pax[:east] - Time.now) / (60 * 60 * 24)
-    hours = (days - days.floor) * 24 
-    m.reply "PAX East is #{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
+    m.reply time_left('PAX East', @pax[:east]) 
   end
 
   def prime(m)
-    days = (@pax[:prime] - Time.now) / (60 * 60 * 24)
+    m.reply time_left('PAX Prime', @pax[:prime]) 
+  end
+
+  def time_left(name, time) 
+    days = (time - Time.now) / 86400 # 86400 seconds in a day, etc. 
     hours = (days - days.floor) * 24 
-    m.reply "PAX Prime is #{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
+    "#{name} is #{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
   end
 end
