@@ -22,9 +22,9 @@ class LinkLogger
       msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
       m.user.send msg
     else 
-      top10 = @storage.data[:history][m.channel.name].values.sort {|a,b| b[:time] <=> a[:time] }
       m.user.send "Recent Links in #{m.channel}"
-      top10[0,10].each_with_index do |link, i|
+      last = @storage.data[:history][m.channel.name].values.sort {|a,b| b[:time] <=> a[:time] }
+      last[0,10].each_with_index do |link, i|
         if link[:title].nil? 
           m.user.send "#{i + 1}. #{expand(link[:short_url])}"
         else 
