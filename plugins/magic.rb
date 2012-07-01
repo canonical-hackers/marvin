@@ -65,7 +65,7 @@ class Magic
 
   def get_card_link(data) 
     begin 
-      return "http://magiccards.info" + data.match(/<a href="([^>]*)">[^<]+<\/a>/)[1] rescue 'NO MATCH'
+      return "http://magiccards.info" + data.match(/<a href="([^>]*)">[^<]+<\/a>/)[1]
     rescue 
       'Error finding this card\'s url'
     end
