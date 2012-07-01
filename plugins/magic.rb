@@ -9,8 +9,7 @@ class Magic
   match /magic (.*)/
 
   def execute(m, term)
-    term = get_card(term)
-    m.reply term || 'Card not found', term.nil?
+    m.reply get_card(term) || 'Card not found', term.nil?
   end
 
   private
