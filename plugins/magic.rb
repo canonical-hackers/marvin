@@ -6,6 +6,7 @@ class Magic
   self.help = "Use .mtg <card name> to see the info for that card."
 
   match /mtg (.*)/
+  match /magic (.*)/
 
   def execute(m, term)
     term = get_card(term)
@@ -26,8 +27,8 @@ class Magic
     begin 
       data = get_html_element(url, '//table[3]/tr/td[2]', 'xpath').to_html
 
-      name = data.match(/<span.*>\n<a href=[^>]*>([^<]+)<\/a>/)[1] rescue 'NO MATCH'
-      link = "http://magiccards.info" + data.match(/<span.*>\n<a href="([^>]*)">[^<]+<\/a>/)[1] rescue 'NO MATCH'
+      name = data.match(/<a href=[^>]*>([^<]+)<\/a>/)[1] rescue 'NO MATCH'
+      link = "http://magiccards.info" + data.match(/<a href="([^>]*)">[^<]+<\/a>/)[1] rescue 'NO MATCH'
       info = data.match(/<p[^>]*>([^<]+)<\/p>/)[1].gsub(/\n/, '').gsub(/—/, '·').gsub(/\s\(\d*\)/, '')  rescue 'NO MATCH'
       text = data.match(/<p class="ctext"><b[^>]*>(.+)<\/b><\/p>/)[1].gsub(/<br><br>/, ' ') rescue 'NO MATCH'
 
