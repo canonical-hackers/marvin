@@ -178,7 +178,6 @@ class LinkLogger
 
     # If the link is to an image, extract the filename.
     if url.match(/\.jpg|gif|png$/)
-      debug url 
       
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
       if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|png|gif)/)
@@ -190,7 +189,6 @@ class LinkLogger
     end
 
     # Grab the element, return nothing if  the site doesn't have a title.
-    debug url 
     page = Nokogiri::HTML(open(url)).css('title')
     return page.first.content.strip.gsub(/\s+/, ' ') unless page.empty?
   end
