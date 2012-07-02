@@ -1,5 +1,5 @@
-require 'cinch'
 require 'rspec/given'
+require_relative 'helpers.rb'
 require_relative '../plugins/sudo'
 
 describe Sudo do
