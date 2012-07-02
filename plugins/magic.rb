@@ -9,31 +9,23 @@ class Magic
   match /magic (.*)/
 
   def execute(m, term)
-    m.reply get_card(term) || 'Card not found', term.nil?
+    m.reply get_card(term)
   end
 
-  private
-
   def get_card(term)
-    # URI Encode
-    term = URI.escape('!' + term, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-    url = "http://magiccards.info/query?q=#{term}"
-
-    # Make sure the URL is legit
-    url = URI::extract(url, ["http", "https"]).first
-
-    # Grab the text
-    begin 
-      data = get_html_element(url, '//table[3]/tr/td[2]', 'xpath').to_html
-      
+    # Fetch the html for the search term
+    data = get_card_data(term)
+    
+    if data.nil? 
+      return '[Magic] Card not found!'
+    else 
       # Build card string
       card = "#{get_card_name(data)} [#{get_card_info(data)}] - #{get_card_text(data)}"
 
       # Truncate if it's super long
       card = truncate(card, 300) 
 
-      return "#{card} [#{get_card_link(data)}]"
-    rescue 
+      return "[Magic] #{card} [#{get_card_link(data)}]"
     end 
   end
 
@@ -76,6 +68,24 @@ class Magic
       return data.match(/<p class="ctext"><b[^>]*>(.+)<\/b><\/p>/)[1].gsub(/<br><br>/, ' ')
     rescue 
       'Error finding this card\'s description.'
+    end
+  end
+
+  def get_card_data(term)
+    # URI Encode the term and build the URL
+    term = URI.escape('!' + term, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+    url = "http://magiccards.info/query?q=#{term}"
+
+    # Make sure the URL is legit
+    url = URI::extract(url, ["http", "https"]).first
+
+    # Grab the html block because magiccards.info fucking loves tables 
+    # and hates helpful ids and classnames
+    begin 
+      return get_html_element(url, '//table[3]/tr/td[2]', 'xpath').to_html
+    rescue 
+      debug "Error looking up card: #{term}"
+      return nil
     end
   end
 end

@@ -31,7 +31,7 @@ class Dickbag
        m.action_message && 
        m.action_message.match(/(bag of dicks|dickbag)/)
       action = m.action_message.match(/^(.*) dickbag/)[1]
-      if action.match(/noms/)
+      if action.match(/noms|eats/)
         @storage.data[:dickbag][:last] = {:action => 'nom', :nick => m.user.nick}  
         add_stats(m.user.nick, 0, @storage.data[:dickbag][:current][:time])
         @storage.data[:dickbag][:current] = Hash.new
@@ -84,13 +84,19 @@ class Dickbag
 
   def info(m)
     if @storage.data[:dickbag].key?(:current)
-      message = "#{@storage.data[:dickbag][:current][:nick]} is currently holding the bag of dicks"
+      if @storage.data[:dickbag][:current].key?(:nick)
+        message = "#{@storage.data[:dickbag][:current][:nick]} is"
+      else  
+        message = 'I am'
+      end
+
+      message << " currently holding the bag of dicks"
 
       if @storage.data[:dickbag][:current].key?(:time)
         message << ". I gave it to them #{@storage.data[:dickbag][:current][:time].ago_in_words}"
       end 
 
-      unless @storage.data[:dickbag][:current][:times_passed] == 0
+      unless @storage.data[:dickbag][:current].key?(:times_passed)
         message << " and it's been shared by #{@storage.data[:dickbag][:current][:times_passed]} other people"
       end
       
