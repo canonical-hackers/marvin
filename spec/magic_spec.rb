@@ -1,6 +1,4 @@
-require 'cinch'
-require 'rspec'
-require './helpers'
+require_relative 'helpers'
 
 describe 'Magic Plugin' do
   
@@ -16,12 +14,12 @@ describe 'Magic Plugin' do
     
     it 'should return a block of html data as a string when searching for a valid term' do
       @plugin.get_card_data(@card[:name]).
-        class.should == String
+        class.should be String
     end
 
     it 'should not return a blank string when searching for a valid term' do
       @plugin.get_card_data(@card[:name]).
-        should_not == ''
+        should_not be ''
     end
 
     it 'should not return nil when searching for a valid term' do
@@ -37,7 +35,7 @@ describe 'Magic Plugin' do
     describe 'Invalid ' do
       it 'should return an error string when querying for text for invalid data' do 
         @plugin.get_card_text(rand_string).
-          should == 'Error finding this card\'s description.'
+          should be 'Error finding this card\'s description.'
       end
 
       it 'should return an error string when querying for text for invalid data' do 

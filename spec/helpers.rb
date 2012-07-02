@@ -1,14 +1,11 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'yaml'
-
 require 'cinch'
 
 # Load Libs
-Dir[File.join('..', 'lib', '*.rb')].each { |file| require_relative file }
-
-# Load Plugins
-Dir[File.join('..', 'plugins', '*.rb')].each { |file| require_relative file }
+Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
+Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
 def fake_bot
   bot = Cinch::Bot.new
