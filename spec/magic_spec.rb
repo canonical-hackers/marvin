@@ -34,7 +34,7 @@ describe 'Magic Plugin' do
         should be_nil 
     end
 
-    describe 'Invalid Data Handling' do
+    describe 'Invalid ' do
       it 'should return an error string when querying for text for invalid data' do 
         @plugin.get_card_text(rand_string).
           should == 'Error finding this card\'s description.'
