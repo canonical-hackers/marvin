@@ -23,8 +23,8 @@ class Dice
 
   def roll_bag(m) 
     nick = m.user.nick.downcase
-    dice = [rand(30), rand(25), rand(20)].map { |d| d.floor } 
-    bag = "#{dice[0]}d6 #{dice[1]}d10 #{dice[2]}d20" 
+    dice = [rand(250), rand(500), rand(750), rand(1000)].map { |d| d.floor } 
+    bag = "#{dice[0]}d4 #{dice[1]}d6 #{dice[2]}d10 #{dice[3]}d20" 
     result = roll_dice(bag) 
     
     total = dice.inject(:+)
@@ -41,7 +41,7 @@ class Dice
     else
       size = 'huge'
     end
-
+    
     m.reply "#{m.user.nick} rolls a #{size} bag of dice totalling #{result[:total]}."
 
     channel = m.channel.name
