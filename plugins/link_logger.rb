@@ -136,7 +136,7 @@ class LinkLogger
 
   def post_image(url, title = nil, nick = nil)
     document = tumblr_header('regular', {'title' => title, 'tags' => nick}) 
-    document << "<p><a href='#{url}'><img src='#{url}' width='500'></a><br/><a href='#{url}'>#{url}</a></p>"
+    document << "<p><a href='#{url}'><img src='#{url}' style='max-width: 650px;'/></a><br/><a href='#{url}'>#{url}</a></p>"
     tublr_post(document)
   end
 
