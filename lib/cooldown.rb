@@ -38,15 +38,13 @@ module Cinch
         end
 
 
-        if channel_cooldown_finished?(channel)
-          time_left = user_time_remaining(channel, nick)
-        else 
-          time_left = channel_time_remaining(channel)
+        message = "Sorry, you'll have to wait "
+        unless channel_cooldown_finished?(channel)
+          message << "#{time_format(channel_time_remaining(channel))} before I can talk in the channel again, and "
         end
+        message << "#{time_format(user_time_remaining(channel, nick))} before your nick can use any commands."
 
-        debug "Cooldown: #{time_left}s"
-
-        m.user.notice "Sorry, you'll have to wait #{time_left} more seconds before I can talk in the channel again."
+        m.user.notice message
         return false
       end
     end
@@ -74,7 +72,5 @@ module Cinch
     def user_time_elapsed(chan, user) 
       (Time.now - $cooldown[chan][user]).floor
     end
-
-
   end
 end

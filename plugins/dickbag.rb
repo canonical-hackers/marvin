@@ -105,14 +105,15 @@ class Dickbag
       unless top.nil?
         if top.key?(:count) && top.key?(:time) && top[:count][:nick] == top[:time][:nick]
           message << ". #{top[:count][:nick].capitalize} seems to love Dicks because they've held " + 
-                     "on to them more times and for longer than anyone else" 
+                     "on to them more times (#{top[:count][:number]}) and " + 
+                     "for longer (#{time_format(top[:time][:number])}) than anyone else " 
         elsif top.key?(:count) && top.key?(:time)
           message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}, " + 
-                     "while #{top[:time][:nick]} has held them for the longest time at #{(top[:time][:number] / 60).round} mins"
+                     "while #{top[:time][:nick]} has held them for the longest time at  #{time_format(top[:time][:number])}"
         elsif top.key?(:count)
           message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}"
         elsif top.key?(:time)
-          message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{(top[:time][:number] / 60).round} mins"
+          message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{time_format(top[:time][:number])}"
         end 
       end
       message << '.'

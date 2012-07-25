@@ -14,6 +14,7 @@ $cooldown = { :config => conf['cooldowns'] } if conf.key?('cooldowns')
 
 # Load Libs
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
+include Common
 
 # Load Plugins
 Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
