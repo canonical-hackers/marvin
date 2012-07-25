@@ -22,7 +22,8 @@ class Dickbag
   set(:prefix => '') 
 
   match /^[!\.]dickbag$/, method: :dickbag
-  match /^[!\.]dickbag info/, method: :info    
+  match /^[!\.](dickbag|db) info/, method: :info    
+  match /^[!\.](dickbag|db) stats/, method: :stats    
 
   def listen(m)
     @storage.data[:dickbag][:current] = {} unless @storage.data[:dickbag].key?(:current)
@@ -80,6 +81,25 @@ class Dickbag
       @storage.save
     end
 
+  end
+
+  def stats(m)
+    stats = []
+    @storage.data[:stats].each_pair do |nick,info|
+      stats << { :nick => nick, :time => info[:time], :count => info[:count] }
+    end
+
+    stats.sort! {|x,y| y[:count] <=> x[:count] } 
+    m.user.msg "Top 5 users by times they've had the bag:" 
+    stats[0..4].each_index do |i| 
+      m.user.msg "#{i + 1}. #{stats[i][:nick]} - #{stats[i][:count]}"
+    end
+    
+    stats.sort! {|x,y| y[:time] <=> x[:time] } 
+    m.user.msg "Top 5 users by the total time they've had the bag:" 
+    stats[0..4].each_index do |i| 
+      m.user.msg "#{i + 1}. #{stats[i][:nick]} - #{time_format(stats[i][:time])}"
+    end
   end
 
   def info(m)
