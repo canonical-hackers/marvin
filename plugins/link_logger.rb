@@ -22,7 +22,6 @@ class LinkLogger
       return
     end
 
-
     if config[:tumblr]
       msg = "Links are available @ http://#{config[:tumblr][:group]}"
       msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
@@ -113,7 +112,7 @@ class LinkLogger
       post_image("http://i.imgur.com/#{redit[1]}", title, nick)
     # Images 
     elsif url.match(/\.jpg|jpeg|gif|png$/i) 
-      post_image(url, nil, nick)
+      post_image(url, title, nick)
     # Youtube / Vimeo
     elsif url.match(/https?:\/\/[^\/]*\.?(youtube|youtu|vimeo)\./) 
       post_video(url, nil, nick)
@@ -183,14 +182,15 @@ class LinkLogger
     url = URI::extract(url, ["http", "https"]).first
 
     # If the link is to an image, extract the filename.
-    if url.match(/\.jpg|gif|png$/)
+    if url.match(/\.jpg|jpeg|gif|png$/)
       
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
-      if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|png|gif)/)
-        imgur_id = url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|png|gif)/)[1]
+      if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)
+        imgur_id = url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)[1]
         url = "http://imgur.com/#{imgur_id}"
       else 
-        return "Image: #{url.match(/\/([^\/]+\.jpg|gif|png)$/)[1]}"
+        site = url.match(/\.([^\.]+\.[^\/]+)/)
+        return site.nil? ? "Image [#{url}]!!!" : "Image from #{site[1]}"
       end
     end
 
