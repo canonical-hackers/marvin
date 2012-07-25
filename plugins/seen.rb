@@ -23,6 +23,11 @@ class Seen
   end
 
   def execute(m, nick)
+    if m.channel.nil?
+      m.user.msg "You must use that command in the main channel."
+      return
+    end
+
     if @storage.data[:seen][m.channel.name].key?(nick.downcase)
       m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago_in_words}", true
     else

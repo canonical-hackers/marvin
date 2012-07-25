@@ -10,6 +10,8 @@ module Cinch
 
     def cooldown_finished?(m)
       synchronize(:cooldown) do
+        return true if m.channel.nil?
+
         channel = m.channel.name
         nick = m.user.nick 
 

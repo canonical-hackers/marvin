@@ -22,6 +22,11 @@ class Dice
   end
 
   def roll_bag(m) 
+    if m.channel.nil?
+      m.user.msg "You must use that command in the main channel."
+      return
+    end
+
     nick = m.user.nick.downcase
     dice = [rand(250), rand(500), rand(750), rand(1000)].map { |d| d.floor } 
     bag = "#{dice[0]}d4 #{dice[1]}d6 #{dice[2]}d10 #{dice[3]}d20" 

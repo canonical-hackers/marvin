@@ -47,6 +47,11 @@ class Karma
   end
 
   def execute(m, item)
+    if m.channel.nil?
+      m.user.msg "You must use that command in the main channel."
+      return
+    end
+
     @storage.data[m.channel.name] = Hash.new unless @storage.data.key?(m.channel.name)
     karma = @storage.data[m.channel.name][item] || 0
     m.reply("Karma for #{item} is #{karma}")

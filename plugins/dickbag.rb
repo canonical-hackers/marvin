@@ -49,6 +49,11 @@ class Dickbag
   end
 
   def dickbag(m)
+    if m.channel.nil?
+      m.user.msg "You must use that command in the main channel."
+      return
+    end
+
     if @storage.data[:dickbag][:current].key?(:nick)
       if @storage.data[:dickbag][:current][:nick] == m.user.nick
         m.reply db_message('same_user'), true

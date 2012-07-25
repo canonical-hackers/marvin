@@ -17,6 +17,12 @@ class LinkLogger
   end
 
   def execute(m)
+    if m.channel.nil?
+      m.user.msg "You must use that command in the main channel."
+      return
+    end
+
+
     if config[:tumblr]
       msg = "Links are available @ http://#{config[:tumblr][:group]}"
       msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
