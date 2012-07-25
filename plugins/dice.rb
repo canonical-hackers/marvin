@@ -28,15 +28,15 @@ class Dice
     result = roll_dice(bag) 
     
     total = dice.inject(:+)
-    if total < 10 && total > 0
+    if total < 100
       size = 'tiny'
-    elsif total < 20 && total > 10 
+    elsif total < 500 && total >= 100 
       size = 'small'
-    elsif total < 30 && total > 20
+    elsif total < 1000 && total >= 500
       size = 'medium'
-    elsif total < 50 && total > 30
+    elsif total < 1500 && total >= 1000
       size = 'large'
-    elsif total < 60 && total > 50
+    elsif total < 2000 && total >= 1500
       size = 'hefty' 
     else
       size = 'huge'
