@@ -15,7 +15,13 @@ class PaxTimer
   end 
 
   def next_pax(m)
-    @pax[:east] < @pax[:prime] ? east(m) : prime(m)
+    if @pax[:prime] < Time.now 
+      east(m)
+    elsif @pax[:east] < Time.now 
+      prime(m) 
+    else 
+      @pax[:east] > @pax[:prime] ? prime(m) : east(m)
+    end
   end
 
   def east(m)
@@ -27,6 +33,7 @@ class PaxTimer
   end
 
   def time_left(name, time) 
+    return name + " has already passed for this year!" unless (time - Time.now) > 0
     days = (time - Time.now) / 86400 # 86400 seconds in a day, etc. 
     hours = (days - days.floor) * 24 
     "#{name} is #{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
