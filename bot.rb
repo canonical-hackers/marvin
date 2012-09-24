@@ -52,6 +52,12 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
   on :channel, /\A\.(help|status)\z/ do |m|
     m.reply "The following plugins are loaded: #{conf['plugins'].join(', ').downcase}. You can see their commands/usage by typing .help <plugin>."
   end
+
+  on :notice, /IDENTIFY/ do |m|
+    if m.user.nick == 'NickServ'
+      m.reply "IDENTIFY #{conf['nickserv_pass']}"
+    end
+  end
 end
 
 # Loggers
