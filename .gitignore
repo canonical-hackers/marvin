@@ -1,5 +1,6 @@
 *~
 config/bot.yml
 config/e-bot.yml
+config/tumblr_creds
 yaml/*
 logs/*

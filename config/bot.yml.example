@@ -1,15 +1,6 @@
 nick: marvin
-server: irc.canonical.org
-cooldowns:
-  '#bottest': 30
+server: irc.server.org
 chans:
   - '#bottest'
 plugins:
-  - Admin
-  - Dice
-  - Karma
-  - Seen
-  - TitleLookup
-  - UrbanDictionary
-  - Wikipedia
   - Weather

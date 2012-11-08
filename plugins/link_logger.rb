@@ -147,21 +147,24 @@ class LinkLogger
   end
 
   def tumblr_header(type = 'regular', options = {})
-    opts = {'type' => type, 'group' => config[:tumblr][:group]}.update(options)
+    opts = {'type' => type, 'hostname' => config[:tumblr][:hostname]}.update(options)
     doc = YAML::dump(opts)
     doc << "---\n"
     return doc
   end 
 
   def tublr_post(doc)
-    request = Tumblr.new(config[:tumblr][:username], config[:tumblr][:password]).post(doc)
-    request.perform do |response|
-      if response.success?
-        debug "Success"
-      else
-        debug "Something went wrong  #{response.code} #{response.message}"
-      end
-    end
+    File.open('yaml/tumblr_tmp.yml', 'w') { |f| f.write(doc) } 
+    output = `bundle exec tumblr post yaml/tumblr_tmp.yml --host=#{config[:tumblr][:hostname]} --credentials=config/tumblr_creds`
+    debug output 
+    #request = Tumblr::Post.load(doc)
+    #request.post(Tumblr::Client.new(config[:tumblr][:group])).perform do |response|
+    #  if response.success?
+    #    debug "Success"
+    #  else
+    #    debug "Something went wrong  #{response.code} #{response.message}"
+    #  end
+    #end
   end
 
   def spam_channel?(url) 
