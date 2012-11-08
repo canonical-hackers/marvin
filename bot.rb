@@ -42,10 +42,8 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
     # Tumblr config 
     if conf.key?('tumblr')
-      c.plugins.options[LinkLogger][:tumblr] = { :username => conf['tumblr']['username'], 
-                                                 :password => conf['tumblr']['password'],  
-                                                 :group    => conf['tumblr']['group'],
-                                                 :tpass    => conf['tumblr']['tpass'] } 
+      c.plugins.options[LinkLogger][:tumblr] = { :hostname  => conf['tumblr']['hostname'],
+                                                 :tpass     => conf['tumblr']['tpass'] } 
     end
   end
 
