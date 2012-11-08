@@ -135,7 +135,7 @@ class LinkLogger
   end
 
   def post_image(url, title = nil, nick = nil)
-    document = tumblr_header('regular', {'title' => title, 'tags' => nick}) 
+    document = tumblr_header('text', {'title' => title, 'tags' => nick}) 
     document << "<p><a href='#{url}'><img src='#{url}' style='max-width: 650px;'/></a><br/><a href='#{url}'>#{url}</a></p>"
     tublr_post(document)
   end
@@ -146,7 +146,7 @@ class LinkLogger
     tublr_post(document)
   end
 
-  def tumblr_header(type = 'regular', options = {})
+  def tumblr_header(type = 'text', options = {})
     opts = {'type' => type, 'hostname' => config[:tumblr][:hostname]}.update(options)
     doc = YAML::dump(opts)
     doc << "---\n"
