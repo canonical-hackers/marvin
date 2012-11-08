@@ -5,16 +5,19 @@ class Hangouts
 
   self.help = "Use .hangouts to see the info for any recent hangouts."
   
-  match /hangouts/
-  
+  match /hangouts\z/, method: :list_hangouts 
+  match /hangouts subscribe/, method: :subscribe 
+  match /hangouts unsubscribe/, method: :unsubscribe 
+
   def initialize(*args)
     super
     @storage = Storage.new('yaml/hangouts.yml')
     @storage.data[:hangouts] ||= {}
+    @storage.data[:subscriptions] ||= []
     @expire_mins = 120
   end
 
-  def execute(m)
+  def list_hangouts(m)
     hangouts = sort_and_expire
     if hangouts.empty?
       m.user.notice "No hangouts have been linked recently!"
@@ -23,6 +26,32 @@ class Hangouts
       hangouts.each do |hangout| 
         m.user.notice "#{hangout[:user]} started a hangout #{hangout[:time].ago_in_words} ago at #{hangout_url(hangout[:id])}"
       end
+    end
+  end
+  
+  def subscribe(m)
+    nick = m.user.nick
+    if @storage.data[:subscriptions].include?(nick)
+      m.user.notice "You are already subscribed, to unsubscribe use `.hangouts unsubscribe`"
+    else 
+      @storage.data[:subscriptions] << nick
+      synchronize(:hangout_save) do
+        @storage.save
+      end
+      m.user.notice "You are now subscribed, and will receive a message when a *new* hangout is linked. To unsubscribe use `.hangouts unsubscribe`."
+    end
+  end
+
+  def unsubscribe(m)
+    nick = m.user.nick
+    if @storage.data[:subscriptions].include?(nick)
+      @storage.data[:subscriptions].delete(nick)
+      synchronize(:hangout_save) do
+        @storage.save
+      end
+      m.user.notice "You are now unsubscribed, and will no longer receive a messages. To resubscribe use `.hangouts subscribe`."
+    else 
+      m.user.notice "You are not subscribed, to subscribe use `.hangouts subscribe`"
     end
   end
 
@@ -35,6 +64,12 @@ class Hangouts
         @storage.data[:hangouts][hangout_id] = {:user => m.user.nick, :time => Time.now} 
         synchronize(:hangout_save) do
           @storage.save
+        end
+        notifications = @storage.data[:subscriptions]
+        notifications.each do |user|
+          unless m.user.nick == user 
+            Cinch::User.new(user, @bot).notice "#{m.user.nick} just linked a new hangout at #{hangout_url(hangout_id)}!"  
+          end
         end
       end
     end
