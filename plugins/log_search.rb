@@ -2,6 +2,8 @@ class LogSearch
   include Cinch::Plugin
   cooldown
 
+  self.help = "Use .search <text> to search the logs. *Only works via private message*, limited to 5 results for now."
+
   match /search (.*)/
 
   def execute(m, search)
@@ -17,7 +19,7 @@ class LogSearch
     @matches = []  
     
     # Search the logs for the phrase, this is pretty simple.  
-    Dir[File.join('.', 'logs', "*.log")].reverse.each do |file| 
+    Dir[File.join('.', 'logs', "*.log")].sort.reverse.each do |file| 
       @matches += File.open(file, 'r').grep(Regexp.new(search))
       # For the sake of sanity, stop looking once we find @max_results
       break if @matches.length > @max_results
