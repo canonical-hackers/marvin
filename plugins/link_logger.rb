@@ -23,7 +23,7 @@ class LinkLogger
     end
 
     if config[:tumblr]
-      msg = "Links are available @ http://#{config[:tumblr][:group]}"
+      msg = "Links are available @ http://#{config[:tumblr][:hostname]}"
       msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
       m.user.send msg
     else 
