@@ -129,19 +129,19 @@ class LinkLogger
   end
 
   def post_quote(quote, source, nick = nil)
-    document = tumblr_header('quote', {'source' => source, 'tags' => nick})
+    document = tumblr_header('quote', {'source' => source, 'tags' => [nick, 'twitter']})
     document << quote
     tublr_post(document)
   end
 
   def post_image(url, title = nil, nick = nil)
-    document = tumblr_header('text', {'title' => title, 'tags' => nick}) 
+    document = tumblr_header('text', {'title' => title, 'tags' => [nick, 'image']}) 
     document << "<p><a href='#{url}'><img src='#{url}' style='max-width: 650px;'/></a><br/><a href='#{url}'>#{url}</a></p>"
     tublr_post(document)
   end
 
   def post_video(url, title, nick = nil)
-    document = tumblr_header('video', {'caption' => title, 'tags' => nick})
+    document = tumblr_header('video', {'caption' => title, 'tags' => [nick, 'video']})
     document << url 
     tublr_post(document)
   end
