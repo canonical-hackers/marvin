@@ -6,7 +6,7 @@ require 'yaml'
 require 'cinch'
 require 'cinch/logger'
 
-# Load the bot config 
+# Load the bot config
 conf = YAML::load(File.open("config/#{ARGV[0] || 'bot'}.yml"))
 
 # Setup the cooldown if one is configured
@@ -25,25 +25,25 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     # Base Config
     c.nick         = conf['nick']
     c.server       = conf['server']
-    c.channels     = conf['chans'].map { |chan| '#' + chan } 
+    c.channels     = conf['chans'].map { |chan| '#' + chan }
     c.max_messages = 1
 
-    # Plugins 
+    # Plugins
     c.plugins.prefix  = '.'
     c.plugins.plugins = conf['plugins'].map { |plugin| Kernel.const_get(plugin) }
-    
-    # Link logger config 
+
+    # Link logger config
     if conf.key?('links')
       c.plugins.options[LinkLogger][:logonly]     = conf['links']['logonly']
       c.plugins.options[LinkLogger][:twitter]     = conf['links']['twitter']
       c.plugins.options[LinkLogger][:whitelist]   = conf['links']['whitelist']
       c.plugins.options[LinkLogger][:reportstats] = conf['links']['reportstats']
-    end 
+    end
 
-    # Tumblr config 
+    # Tumblr config
     if conf.key?('tumblr')
       c.plugins.options[LinkLogger][:tumblr] = { :hostname  => conf['tumblr']['hostname'],
-                                                 :tpass     => conf['tumblr']['tpass'] } 
+                                                 :tpass     => conf['tumblr']['tpass'] }
     end
   end
 
@@ -60,9 +60,9 @@ end
 
 # Loggers
 if conf.key?('logging')
-  conf['logging'].each do |channel| 
+  conf['logging'].each do |channel|
     @bot.loggers << Cinch::Logger::CanonicalLogger.new(channel, conf['nick'])
   end
 end
-   
+
 @bot.start

@@ -4,7 +4,7 @@ class LinkLogger
   require 'twitter'
   require 'nokogiri'
   require 'open-uri'
-  require 'tumblr' 
+  require 'tumblr'
 
   listen_to :channel
   self.help = 'Use .links to see the last 10 links users have posted to the channel.'
@@ -12,7 +12,7 @@ class LinkLogger
 
   def initialize(*args)
     super
-    @storage = Storage.new('yaml/links.yaml') 
+    @storage = Storage.new('yaml/links.yaml')
     @storage.data[:history] ||= Hash.new
   end
 
@@ -26,14 +26,14 @@ class LinkLogger
       msg = "Links are available @ http://#{config[:tumblr][:hostname]}"
       msg << " Password: #{config[:tumblr][:tpass]}" if config[:tumblr][:tpass]
       m.user.send msg
-    else 
+    else
       m.user.send "Recent Links in #{m.channel}"
       last = @storage.data[:history][m.channel.name].values.sort {|a,b| b[:time] <=> a[:time] }
       last[0,10].each_with_index do |link, i|
-        if link[:title].nil? 
+        if link[:title].nil?
           m.user.send "#{i + 1}. #{expand(link[:short_url])}"
-        else 
-          m.user.send "#{i + 1}. #{link[:short_url]} ∴ #{link[:title]}"  
+        else
+          m.user.send "#{i + 1}. #{link[:short_url]} ∴ #{link[:title]}"
         end
       end
     end
@@ -42,19 +42,19 @@ class LinkLogger
   def listen(m)
     urls = URI.extract(m.message, ["http", "https"])
     urls.each do |url|
-      @storage.data[:history][m.channel.name] ||= Hash.new 
-  
+      @storage.data[:history][m.channel.name] ||= Hash.new
+
       if @storage.data[:history][m.channel.name].key?(url)
         link = @storage.data[:history][m.channel.name][url]
-        
+      
         if spam_channel?(url)
-          m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?  
+          m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?
 
           unless config[:reportstats] == false || link[:nick] == m.user.nick
             if link[:count] == 1
-              m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true 
-            else 
-              m.reply "That was already linked #{link[:count]} times. " + 
+              m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true
+            else
+              m.reply "That was already linked #{link[:count]} times. " +
                       "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
             end
           end
@@ -68,7 +68,7 @@ class LinkLogger
             twitter[:status] = Twitter.status(tweet[2]).text
             twitter[:user] = tweet[1]
             m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
-            post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>") 
+            post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>")
           end
         elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
           if spam_channel?(url)
@@ -76,28 +76,28 @@ class LinkLogger
           end
         end
 
-      else   
+      else 
         short_url = shorten(url)
         title = get_title(url)
-       
+     
         tumble(url, title, m.user.nick) if config[:tumblr]
 
         # Only spam the channel if you have a title and url.
         if spam_channel?(url)
-          m.reply("#{short_url} ∴  #{title}") if short_url && title 
+          m.reply("#{short_url} ∴  #{title}") if short_url && title
         end
 
-        @storage.data[:history][m.channel.name][url] = {:nick => m.user.nick, 
-                                                        :title => title || nil, 
+        @storage.data[:history][m.channel.name][url] = {:nick => m.user.nick,
+                                                        :title => title || nil,
                                                         :count => 1,
                                                         :short_url => short_url,
                                                         :time => Time.now }
       end
     end
 
-    if urls 
-      synchronize(:save_links) do 
-        @storage.save   
+    if urls
+      synchronize(:save_links) do
+        @storage.save 
       end
     end
   end
@@ -106,24 +106,24 @@ class LinkLogger
 
   def tumble(url, title, nick)
     return unless config[:tumblr]
-    
-    # Redit 
+  
+    # Redit
     if redit = url.match(/^https?:\/\/.*imgur\.com.*([A-Za-z0-9]{5}\.\S{3})/)
       post_image("http://i.imgur.com/#{redit[1]}", title, nick)
-    # Images 
-    elsif url.match(/\.jpg|jpeg|gif|png$/i) 
+    # Images
+    elsif url.match(/\.jpg|jpeg|gif|png$/i)
       post_image(url, title, nick)
     # Youtube / Vimeo
-    elsif url.match(/https?:\/\/[^\/]*\.?(youtube|youtu|vimeo)\./) 
+    elsif url.match(/https?:\/\/[^\/]*\.?(youtube|youtu|vimeo)\./)
       post_video(url, nil, nick)
-    # Everything else 
-    else 
+    # Everything else
+    else
       post_link(url, title, nick)
     end
   end
-  
-  def post_link(url, title = nil, nick = nil) 
-    document = tumblr_header('link', {'name' => title, 'tags' => nick}) 
+
+  def post_link(url, title = nil, nick = nil)
+    document = tumblr_header('link', {'name' => title, 'tags' => nick})
     document << url
     tublr_post(document)
   end
@@ -135,14 +135,14 @@ class LinkLogger
   end
 
   def post_image(url, title = nil, nick = nil)
-    document = tumblr_header('text', {'title' => title, 'tags' => [nick, 'image']}) 
+    document = tumblr_header('text', {'title' => title, 'tags' => [nick, 'image']})
     document << "<p><a href='#{url}'><img src='#{url}' style='max-width: 650px;'/></a><br/><a href='#{url}'>#{url}</a></p>"
     tublr_post(document)
   end
 
   def post_video(url, title, nick = nil)
     document = tumblr_header('video', {'caption' => title, 'tags' => [nick, 'video']})
-    document << url 
+    document << url
     tublr_post(document)
   end
 
@@ -151,13 +151,13 @@ class LinkLogger
     doc = YAML::dump(opts)
     doc << "---\n"
     return doc
-  end 
+  end
 
   def tublr_post(doc)
     post = Tumblr::Post.load(doc)
     client = Tumblr::Client.new(config[:tumblr][:hostname], YAML.load(File.open('config/tumblr_creds')))
     request = post.post(client)
-    
+  
     request.perform do |response|
       if response.success?
         debug "Success"
@@ -167,17 +167,15 @@ class LinkLogger
     end
   end
 
-  def spam_channel?(url) 
+  def spam_channel?(url)
     whitelisted?(url) && !logonly?
   end
 
   def whitelisted?(url)
     return true unless config[:whitelist]
-
     debug "Checking Whitelist! #{config[:whitelist]} url: #{url}"
     return true if url.match(Regexp.new("https?\/\/.*\.?#{config[:whitelist].join('|')}\."))
-       
-    return false 
+    false
   end
 
   def get_title(url)
@@ -186,12 +184,11 @@ class LinkLogger
 
     # If the link is to an image, extract the filename.
     if url.match(/\.jpg|jpeg|gif|png$/)
-      
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
       if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)
         imgur_id = url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)[1]
         url = "http://imgur.com/#{imgur_id}"
-      else 
+      else
         site = url.match(/\.([^\.]+\.[^\/]+)/)
         return site.nil? ? "Image [#{url}]!!!" : "Image from #{site[1]}"
       end
@@ -203,10 +200,10 @@ class LinkLogger
   end
 
 
-  def logonly? 
+  def logonly?
     return false if config[:logonly].nil?
     return true  if config[:logonly] == true
-    false 
+    false
   end
 
 end
