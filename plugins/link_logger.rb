@@ -66,7 +66,7 @@ class LinkLogger
         if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
           unless config[:twitter] == false
             twitter[:status] = Twitter.status(tweet[2]).text
-            twitter[:status].gsub!(/[\n]+/, "");
+            twitter[:status].gsub!(/[\n]+/, " ");
             twitter[:user] = tweet[1]
             m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
             post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>")
