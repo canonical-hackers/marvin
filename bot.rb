@@ -27,6 +27,9 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     c.server       = conf['server']
     c.channels     = conf['chans'].map { |chan| '#' + chan } 
     c.max_messages = 1
+    if conf.key?('port')
+      c.port       = conf['port']
+    end
 
     # Plugins 
     c.plugins.prefix  = '.'
