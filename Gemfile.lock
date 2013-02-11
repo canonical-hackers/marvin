@@ -15,6 +15,7 @@ GEM
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
     i18n (0.6.0)
+    json (1.7.7)
     libxml-ruby (2.3.2)
     mime-types (1.18)
     multi_json (1.3.4)
@@ -75,6 +76,7 @@ DEPENDENCIES
   cinch
   crack (= 0.1.7)
   file-tail
+  json (= 1.7.7)
   multi_json
   nokogiri
   rspec
