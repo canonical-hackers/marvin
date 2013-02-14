@@ -22,10 +22,10 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     # Base Config
     c.nick         = conf['nick']
     c.server       = conf['server']
-    c.channels     = conf['chans'].map { |chan| '#' + chan } 
+    c.channels     = conf['chans'].map { |chan| '#' + chan }
     c.max_messages = 1
 
-    # Plugins 
+    # Plugins
     c.plugins.prefix  = '.'
     c.plugins.plugins = conf['plugins'].map { |plugin| Kernel.const_get(plugin) }
 
@@ -43,10 +43,6 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
       c.shared[:cooldown] = { :config => conf['cooldowns'] } 
     end
 
-
- 
-    
-
     # Link logger config 
     if conf.key?('links')
       c.plugins.options[LinkLogger] = { :logonly      => conf['links']['logonly'], 
@@ -55,12 +51,10 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
                                         :reportstats  => conf['links']['reportstats'] }
     end 
 
-    # Tumblr config 
+    # Tumblr config
     if conf.key?('tumblr')
-      c.plugins.options[LinkLogger][:tumblr] = { :username => conf['tumblr']['username'], 
-                                                 :password => conf['tumblr']['password'],  
-                                                 :group    => conf['tumblr']['group'],
-                                                 :tpass    => conf['tumblr']['tpass'] } 
+      c.plugins.options[LinkLogger][:tumblr] = { :hostname  => conf['tumblr']['hostname'],
+                                                 :tpass     => conf['tumblr']['tpass'] }
     end
   end
 
@@ -77,9 +71,9 @@ end
 
 # Loggers
 if conf.key?('logging')
-  conf['logging'].each do |channel| 
+  conf['logging'].each do |channel|
     @bot.loggers << Cinch::Logger::CanonicalLogger.new(channel, conf['nick'])
   end
 end
-   
+
 @bot.start

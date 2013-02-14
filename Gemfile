@@ -8,5 +8,7 @@ gem 'twitter'
 gem 'rspec'
 gem 'rspec-given'
 gem 'file-tail'
-gem 'tumblr-rb', :git => "git://github.com/mwunsch/tumblr.git", :branch => "v2"
+gem 'tumblr-rb', '2.0.0'
 gem 'crack', '0.1.7'
+gem 'multi_json'
+gem 'json', '1.7.7'

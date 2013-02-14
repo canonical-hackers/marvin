@@ -9,15 +9,15 @@ class BotReply
 
   set(:prefix => '')
   match /^(\S+):/
-    
+
   def execute(m, nick)
     if nick == m.bot.nick
       quotes = @quotes[nick]
-      if quotes.nil? || quotes.empty? 
+      if quotes.nil? || quotes.empty?
         debug "No quotes defined for bot named #{nick}"
-      else 
+      else
         m.reply quotes[rand(quotes.length)], true
       end
     end
   end
-end 
+end

@@ -14,12 +14,11 @@ class Karma
   end
 
   def listen(m)
-    if m.message.match(/\S+[\+\-]{2}/) 
-      
-      channel = m.channel.name  
-      @storage.data[channel] = Hash.new unless @storage.data.key?(channel) 
-      updated = false 
-      
+    if m.message.match(/\S+[\+\-]{2}/)
+      channel = m.channel.name
+      @storage.data[channel] = Hash.new unless @storage.data.key?(channel)
+      updated = false
+
       m.message.scan(/.*?((\w+)|\((.+?)\))(\+\+|--)(\s|\z)/).each do |karma|
         debug "#{karma}"
         if karma[0]
@@ -32,14 +31,14 @@ class Karma
           elsif karma[3] == '--'
             @storage.data[channel][item] -= 1
             updated = true
-          else 
+          else
             debug 'something went wrong matching karma!'
           end
         end
       end
-      
+
       if updated
-        synchronize(:karma_save) do 
+        synchronize(:karma_save) do
           @storage.save
         end
       end

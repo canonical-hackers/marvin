@@ -21,7 +21,7 @@ class UrbanDictionary
     # Grab the element
     text = get_html_element(url, '.definition')
 
-    #Make sure it's not terribly long 
+    #Make sure it's not terribly long
     return truncate(text, 250)
   end
 end

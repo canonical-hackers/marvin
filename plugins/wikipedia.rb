@@ -23,7 +23,7 @@ class Wikipedia
     text = get_html_element(url, '#mw-content-text p')
 
     # Truncate if it's super long
-    text = truncate(text, 300) 
+    text = truncate(text, 300)
 
     return "#{text} [#{shorten(url)}]"
   end

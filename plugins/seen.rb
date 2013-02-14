@@ -5,7 +5,7 @@ class Seen
   listen_to :channel
   self.help = "Use .seen <name> to see the last time that nick was active."
   attr_accessor :storage
-  
+
   match /seen (.+)/
 
   def initialize(*args)

@@ -7,9 +7,9 @@ module Cinch
         return unless will_log?(level)
 
         @mutex.synchronize do
-          # Ensure that we're logging to the right file. 
+          # Ensure that we're logging to the right file.
           Array(messages).each do |message|
-            next unless message.match(Regexp.new("PRIVMSG ##{@channel}"))           
+            next unless message.match(Regexp.new("PRIVMSG ##{@channel}"))
             message = format_general(message)
             message = format_message(message, event)
 
@@ -19,7 +19,7 @@ module Cinch
           end
         end
       end
-      
+
       def initialize(channel, bot)
         @bot_name = bot
         @channel  = channel
@@ -46,12 +46,12 @@ module Cinch
         generic_format(@bot_name, msg)
       end
 
-      def generic_format(nick, m) 
+      def generic_format(nick, m)
         message = '[' + Time.now.strftime("%Y-%m-%d %H:%M:%S") + '] '
         # This seems gross, fix this with better rubies.
-        if m.codepoints.first == 1 && m.match(/ACTION/) 
+        if m.codepoints.first == 1 && m.match(/ACTION/)
           message << " * #{nick} #{m.gsub(/^.?ACTION /, '')}"
-        else 
+        else
           message << "<#{nick}> #{m}"
         end
         return message

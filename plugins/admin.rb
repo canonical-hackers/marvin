@@ -1,7 +1,7 @@
 class Admin
   include Cinch::Plugin
 
-  # Due to how not so secure this is don't add any real channel admin stuff here. 
+  # Due to how not so secure this is don't add any real channel admin stuff here.
   # Limit these commands to simple non destructive bot commands
 
   match /join (.+)/, method: :join
@@ -16,7 +16,6 @@ class Admin
   def check_user(user)
     user.refresh # be sure to refresh the data, or someone could steal
                  # the nick
-    
     @admins.include?(user.nick.downcase)
   end
 

@@ -1,4 +1,10 @@
 *~
+<<<<<<< HEAD
 config/*.yml
+=======
+config/bot.yml
+config/e-bot.yml
+config/tumblr_creds
+>>>>>>> 2e583989a384b898632883b96f78c954bfa490f9
 yaml/*
 logs/*
