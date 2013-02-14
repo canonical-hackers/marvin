@@ -5,6 +5,8 @@ GEM
     cinch (2.0.2)
     crack (0.1.7)
     diff-lcs (1.1.3)
+    faraday (0.8.4)
+      multipart-post (~> 1.1)
     file-tail (1.0.12)
       tins (~> 0.5)
     happymapper (0.4.0)
@@ -13,6 +15,7 @@ GEM
     libxml-ruby (2.3.2)
     mime-types (1.18)
     multi_json (1.3.7)
+    multipart-post (1.1.5)
     nokogiri (1.5.2)
     promise (0.3.0)
     rack (1.4.1)
@@ -64,6 +67,7 @@ PLATFORMS
 DEPENDENCIES
   cinch
   crack (= 0.1.7)
+  faraday
   file-tail
   json (= 1.7.7)
   multi_json

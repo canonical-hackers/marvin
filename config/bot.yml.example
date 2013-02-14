@@ -25,9 +25,7 @@ plugins:
 #            This is used in the link logger plugin to post all the links from a channel to a tumblr. 
 # 
 # tumblr:
-#   username: 'username'
-#   password: 'password'
-#   group:    'full url of the tumblr'
+#   hostname: 'full url of the tumblr'
 #   tpass:    'Password if the tumblr is protected'
 
 # [Optional] LinkLogger configuration options

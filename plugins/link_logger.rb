@@ -154,8 +154,12 @@ class LinkLogger
   end
 
   def tublr_post(doc)
-    post = Tumblr::Post.load(doc)
+    unless File.exists?('config/tumblr_creds') 
+      debug "Tumblr creds file missing, please place a tumblr config file in `config/tumblr_creds`."
+      return
+    end
     client = Tumblr::Client.new(config[:tumblr][:hostname], YAML.load(File.open('config/tumblr_creds')))
+    post = Tumblr::Post.load(doc)
     request = post.post(client)
   
     request.perform do |response|
