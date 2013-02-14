@@ -7,10 +7,7 @@ require 'cinch'
 require 'cinch/logger'
 
 # Load the bot config 
-conf = YAML::load(File.open("config/#{ARGV[0] || 'bot'}.yml"))
-
-# Setup the cooldown if one is configured
-$cooldown = { :config => conf['cooldowns'] } if conf.key?('cooldowns')
+conf = YAML::load(File.open('config/bot.yml'))
 
 # Load Libs
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
@@ -31,13 +28,31 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     # Plugins 
     c.plugins.prefix  = '.'
     c.plugins.plugins = conf['plugins'].map { |plugin| Kernel.const_get(plugin) }
+
+    # Setup bit.ly config, exit if not configured. 
+    if !conf.key?('bitly')
+      puts "Please set your bit.ly info in conf/bot.yml if you want to use plugins that use url shortening."
+      exit
+    else        
+      c.shared = { :bitly => { :username => conf['bitly']['username'],
+                               :apikey   => conf['bitly']['apikey'] } }
+    end
+
+    # Setup the cooldown if one is configured
+    if conf.key?('cooldowns')
+      c.shared[:cooldown] = { :config => conf['cooldowns'] } 
+    end
+
+
+ 
     
+
     # Link logger config 
     if conf.key?('links')
-      c.plugins.options[LinkLogger][:logonly]     = conf['links']['logonly']
-      c.plugins.options[LinkLogger][:twitter]     = conf['links']['twitter']
-      c.plugins.options[LinkLogger][:whitelist]   = conf['links']['whitelist']
-      c.plugins.options[LinkLogger][:reportstats] = conf['links']['reportstats']
+      c.plugins.options[LinkLogger] = { :logonly      => conf['links']['logonly'], 
+                                        :twitter      => conf['links']['twitter'],
+                                        :whitelist    => conf['links']['whitelist'],
+                                        :reportstats  => conf['links']['reportstats'] }
     end 
 
     # Tumblr config 

@@ -19,9 +19,8 @@ module Common
   end
 
   def expand(url)
-    @bitlyconfig = YAML::load(File.open('config/bitly.yml'))
     if url.match(/bit\.ly/) 
-      return Bitly.expand(url, @bitlyconfig['username'], @bitlyconfig['apikey']).long_url
+      return Bitly.expand(url, shared[:bitly][:username], shared[:bitly][:apikey]).long_url
     else 
       return url 
     end
@@ -43,8 +42,7 @@ module Common
       return url     
     end
     
-    @bitlyconfig = YAML::load(File.open('config/bitly.yml'))
-    return Bitly.shorten(url, @bitlyconfig['username'], @bitlyconfig['apikey']).url
+    return Bitly.shorten(url, shared[:bitly][:username], shared[:bitly][:apikey]).url
   end
 
   def truncate(text, length = 250) 

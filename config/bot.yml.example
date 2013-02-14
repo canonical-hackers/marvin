@@ -1,6 +1,62 @@
+# [Required] Configuration settings
 nick: marvin
 server: irc.server.org
 chans:
   - '#bottest'
 plugins:
   - Weather
+
+# [Optional] Pass to pass to a NickServ if it messages the bot for nick auth. 
+# nickserv_pass: p4ssw0rd
+
+# [Required] Bit.ly configuration, you will need this for the URL shortening aspects of 
+#            many plugins to work.
+# bitly:
+#   apikey: 'APIKEYHERE'
+#   username: 'username'
+
+# [Optional] Logging config options.
+# Logs will be placed in BOTROOT/logs/CHANNEL_YYYY-MM-DD.log
+#
+# logging:
+#   - bottest
+
+# [Optional] Tumblr Config. 
+#            This is used in the link logger plugin to post all the links from a channel to a tumblr. 
+# 
+# tumblr:
+#   username: 'username'
+#   password: 'password'
+#   group:    'full url of the tumblr'
+#   tpass:    'Password if the tumblr is protected'
+
+# [Optional] LinkLogger configuration options
+#
+# links:
+#
+# Hide title fetching and short urls for pasted links. 
+#   logonly: true
+#
+# Hide twitter status lookups.
+#   twitter: false 
+#
+# If defined the bot will not post titles of links unless they from sites on the whitelist.
+#   whitelist: 
+#     - youtube
+#     - twitter  
+#
+# Hides the responses to links if they have already been linked. 
+#   reportstats: false
+
+# [Optional] Cooldown Config: You can set a cooldown here for how often (in seconds) commands may be processed.
+#            `global` controls how often the bot can respond in the channel.
+#            `user` controls how often a specific user can issue a command. 
+#
+# cooldowns:
+#   '#general':
+#     global: 30
+#     user: 120
+#   '#dicerolls':
+#     global: 5 
+#     user: 10
+

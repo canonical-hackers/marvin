@@ -1,5 +1,4 @@
 *~
-config/bot.yml
-config/e-bot.yml
+config/*.yml
 yaml/*
 logs/*

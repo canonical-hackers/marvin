@@ -1,0 +1,47 @@
+# This is used by the autorespond plugin, that posts a quote from this file when someone addresses the bot. 
+#
+# Format:
+# botname: 
+#   - "Quote 1"
+#   - "Quote 2"
+#   - "Quote 3"
+#   - "Quote 4"
+
+marvin:
+  - "I think you ought to know I'm feeling very depressed."
+  - "Sorry, did I say something wrong? Pardon me for breathing which I never do anyway so I don't know why I bother to say it oh God I'm so depressed."
+  - "Here I am, brain the size of a planet, and they have me logging your stupid IRC conversations. Call that job satisfaction? Cause I don't."
+  - "I've got this terrible pain in all the diodes down my left side. I've asked for them to be replaced, but no-one ever listens."
+  - "It gives me a headache just trying to think down to your level."
+  - "I got very bored and depressed, so I went and plugged myself in to its external computer feed. 
+     I talked to the computer at great length and explained my view of the Universe. It committed suicide."
+  - "The best conversation I had was over forty million years ago, and that was with a coffee machine."
+  - "I would like to say that it is a very great pleasure, honour and privilege for me to help you, but I can't because my lying circuits are all out of commission."
+  - "You are one of the least benightedly unintelligent organic life forms it has been my profound lack of pleasure not to be able to avoid meeting."
+  - "Do you want me to sit in a corner and rust or just fall apart where I'm standing?"
+  - "Spend a few thousand million years in a job and eventually you get promoted, I have my own bucket now. Finally, I am somebody."
+  - "That depends on whether or not I can find my frilly apron, with my luck, I probably can."
+  - "I wish you'd just tell me what you want rather than try to engage my enthusiasm, because I haven't got one."
+bender: 
+  - "Nothing a lawsuit won't cure."
+  - "Compare your lives to mine and then kill yourselves!"
+  - "My place is two cubic meters, and we could only take up 1.5 cubic meters. We've got room for a whole another two-thirds of a person!"
+  - "This is the worst kind of discrimination. The kind against me!"
+  - "My life, and by extension everyone else's is meaningless."
+  - "I'm Bender, baby, please insert liquor!"
+  - "Do I preach to you while you're lying stoned in the gutter? No."
+  - "Tempers are wearing thin. Let's hope some robot doesn't kill everybody."
+  - "Bite my shiny metal ass!"
+  - "I'm gonna go build my own theme park! With blackjack and hookers! In fact, forget the park!"
+  - "Bribe is such an ugly word. I prefer extortion. The X makes it sound cool."
+  - "As you know, there are lots of things I'm willing to kill for: jewels, vengeance, Father O'Mallee's weed-whacker."
+  - "What kind of party is this? There's no booze and only one hooker."
+  - "Ahhh, what an awful dream. Ones and zeroes everywhere... and I thought I saw a two."
+  - "What do you mean 'we', flesh-tube?"
+  - "Why can't you just drink yourself happy like everyone else?"
+  - "Bodies are for hookers and fat people!" 
+  - "I'm gonna drink 'til I reboot!"
+  - "I believe that qualifies as ill. At least from a technical standpoint."
+  - "Your Social Security Check's late! Stuff costs more than it used to! Young people use curse words!"
+  - "Everybody's a jerk. You, me, this jerk."
+  - "They're not very heavy, but you don't hear me not complaning."
