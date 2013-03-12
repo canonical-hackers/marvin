@@ -60,15 +60,19 @@ class Hangouts
     # https://plus.google.com/hangouts/_/fbae432b70a47bdf7786e53a16f364895c09d9f8
     if m.message.match(/plus.google.com\/hangouts\//)
       hangout_id = m.message[/[^\/?]{40}/, 0]
-      unless hangout_id.nil? || @storage.data[:hangouts].key?(hangout_id)
-        @storage.data[:hangouts][hangout_id] = {:user => m.user.nick, :time => Time.now}
-        synchronize(:hangout_save) do
-          @storage.save
-        end
-        notifications = @storage.data[:subscriptions]
-        notifications.each do |user|
-          unless m.user.nick == user
-            Cinch::User.new(user, @bot).notice "#{m.user.nick} just linked a new hangout at #{hangout_url(hangout_id)}!"
+      unless hangout_id.nil?
+        if @storage.data[:hangouts].key?(hangout_id)
+          # Might want to reup the expire time, not sure
+        else
+          @storage.data[:hangouts][hangout_id] = {:user => m.user.nick, :time => Time.now}
+          synchronize(:hangout_save) do
+            @storage.save
+          end
+          notifications = @storage.data[:subscriptions]
+          notifications.each do |user|
+            unless m.user.nick == user
+              Cinch::User.new(user, @bot).notice "#{m.user.nick} just linked a new hangout at #{hangout_url(hangout_id)}!"
+            end
           end
         end
       end

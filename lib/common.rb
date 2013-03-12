@@ -19,16 +19,14 @@ module Common
   end
 
   def expand(url)
-    if url.match(/bit\.ly/) 
+    if url.match(/bit\.ly/)
       return Bitly.expand(url, shared[:bitly][:username], shared[:bitly][:apikey]).long_url
-    else 
-      return url 
+    else
+      return url
     end
   end
 
   def shorten(url)
-    # Let's not shorten urls that don't really need it
-
     # Use the youtube shortener matcher if it's for YT
     if yt_id = url.match(/http:\/\/w{3}?\.?youtube\.com.+(\S{11})/)
       return "http://youtu.be/#{yt_id[1]}"
