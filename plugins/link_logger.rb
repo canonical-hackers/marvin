@@ -139,11 +139,7 @@ class LinkLogger
   end
 
   def post_video(url, title, nick = nil)
-<<<<<<< HEAD
     document = tumblr_header('video', {'caption' => title, 'tags' => [nick, 'video']})
-=======
-    document = tumblr_header('video', {'caption' => title, 'tags' => nick})
->>>>>>> cce909313ea76f6b82b4a77a11c29b80adbba74d
     document << url
     tublr_post(document)
   end
