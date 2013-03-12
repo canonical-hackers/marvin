@@ -46,7 +46,6 @@ class LinkLogger
 
       if @storage.data[:history][m.channel.name].key?(url)
         link = @storage.data[:history][m.channel.name][url]
-      
         if spam_channel?(url)
           m.reply("#{link[:short_url]} ∴  #{link[:title]}") unless link[:title].nil?
 
@@ -66,6 +65,7 @@ class LinkLogger
         if tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)\/statuse?s?\/(\d+)\/?/)
           unless config[:twitter] == false
             twitter[:status] = Twitter.status(tweet[2]).text
+            twitter[:status].gsub!(/[\n]+/, " ");
             twitter[:user] = tweet[1]
             m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
             post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>")
@@ -79,7 +79,6 @@ class LinkLogger
       else 
         short_url = shorten(url)
         title = get_title(url)
-     
         tumble(url, title, m.user.nick) if config[:tumblr]
 
         # Only spam the channel if you have a title and url.
@@ -97,7 +96,7 @@ class LinkLogger
 
     if urls
       synchronize(:save_links) do
-        @storage.save 
+        @storage.save
       end
     end
   end
@@ -106,7 +105,6 @@ class LinkLogger
 
   def tumble(url, title, nick)
     return unless config[:tumblr]
-  
     # Redit
     if redit = url.match(/^https?:\/\/.*imgur\.com.*([A-Za-z0-9]{5}\.\S{3})/)
       post_image("http://i.imgur.com/#{redit[1]}", title, nick)
@@ -141,7 +139,11 @@ class LinkLogger
   end
 
   def post_video(url, title, nick = nil)
+<<<<<<< HEAD
     document = tumblr_header('video', {'caption' => title, 'tags' => [nick, 'video']})
+=======
+    document = tumblr_header('video', {'caption' => title, 'tags' => nick})
+>>>>>>> cce909313ea76f6b82b4a77a11c29b80adbba74d
     document << url
     tublr_post(document)
   end
@@ -154,14 +156,13 @@ class LinkLogger
   end
 
   def tublr_post(doc)
-    unless File.exists?('config/tumblr_creds') 
+    unless File.exists?('config/tumblr_creds')
       debug "Tumblr creds file missing, please place a tumblr config file in `config/tumblr_creds`."
       return
     end
     client = Tumblr::Client.new(config[:tumblr][:hostname], YAML.load(File.open('config/tumblr_creds')))
     post = Tumblr::Post.load(doc)
     request = post.post(client)
-  
     request.perform do |response|
       if response.success?
         debug "Success"
