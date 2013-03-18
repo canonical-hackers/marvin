@@ -16,17 +16,18 @@ class Quotes
   end
 
   def add_quote(m, user, text)
-    debug "ADD"
     nick = m.user.nick
-    unless @storage.data[:quotes].key?(nick)
-      @storage.data[:quotes][user] = []
+
+    unless @storage.data[:quotes].key?(user.downcase)
+      @storage.data[:quotes][user.downcase] = []
     end
 
     quote = { :added_by => nick,
+              :canonical_nick => user,
               :quote => text,
               :time => Time.now }
 
-    @storage.data[:quotes][user] << quote
+    @storage.data[:quotes][user.downcase] << quote
 
     synchronize(:save_quotes) do
       @storage.save
@@ -34,12 +35,11 @@ class Quotes
   end
 
   def get_quote(m, nick)
-    debug "GET"
+    nick.downcase!
     return unless @storage.data[:quotes].key?(nick)
     quotes = @storage.data[:quotes][nick]
     q = quotes[rand(quotes.length)]
-    m.reply "<#{nick}> #{q[:quote]}"
-    debug "GET"
+    m.reply "<#{q[:canonical_nick]}> #{q[:quote]}"
   end
 end
 
