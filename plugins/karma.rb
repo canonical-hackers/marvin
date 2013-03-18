@@ -23,6 +23,8 @@ class Karma
         debug "#{karma}"
         if karma[0]
           item = karma[1] || karma[2]
+          item.downcase!
+
           @storage.data[channel][item] = 0 unless @storage.data[channel].key?(item)
 
           if karma[3] == '++'
@@ -52,7 +54,7 @@ class Karma
     end
 
     @storage.data[m.channel.name] = Hash.new unless @storage.data.key?(m.channel.name)
-    karma = @storage.data[m.channel.name][item] || 0
+    karma = @storage.data[m.channel.name][item.downcase] || 0
     m.reply("Karma for #{item} is #{karma}")
   end
 end
