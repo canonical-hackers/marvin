@@ -19,10 +19,10 @@ module Common
   end
 
   def expand(url)
-    if url.match(/bit\.ly/) 
+    if url.match(/bit\.ly/)
       return Bitly.expand(url, shared[:bitly][:username], shared[:bitly][:apikey]).long_url
-    else 
-      return url 
+    else
+      return url
     end
   end
 
