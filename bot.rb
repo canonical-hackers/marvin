@@ -68,7 +68,7 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
   on :channel, /\A\.stats\z/ do |m|
     if conf['stats_url']
       m.user.send "The stats for the channel are available at: #{conf['stats_url']}"
-    else 
+    else
       m.user.send "No stats page has been defined for this channel, sorry!"
     end
   end
