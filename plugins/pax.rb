@@ -3,7 +3,6 @@ class PaxTimer
   require 'time-lord'
   cooldown
 
-
   match /(time|pax|timetillpax)\z/, method: :next_pax
   match /east|paxeast/, method: :next_east
   match /prime|paxprime/, method: :next_prime
