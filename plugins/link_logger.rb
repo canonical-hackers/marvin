@@ -14,6 +14,14 @@ class LinkLogger
     super
     @storage = Storage.new('yaml/links.yaml')
     @storage.data[:history] ||= Hash.new
+    if config[:twitter]
+      Twitter.configure do |c|
+        c.consumer_key = config[:twitter][:consumer_key]
+        c.consumer_secret = config[:twitter][:consumer_secret]
+        c.oauth_token = config[:twitter][:oauth_token]
+        c.oauth_token_secret = config[:twitter][:oauth_secret]
+      end
+    end
   end
 
   def execute(m)
@@ -67,7 +75,7 @@ class LinkLogger
             twitter[:status] = Twitter.status(tweet[2]).text
             twitter[:status].gsub!(/[\n]+/, " ");
             twitter[:user] = tweet[1]
-            m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\"."
+            m.reply "@#{twitter[:user]} tweeted \"#{twitter[:status]}\""
             post_quote(twitter[:status], "<a href='#{url}'>#{twitter[:user]} on Twitter</a>")
           end
         elsif tweet = url.match(/https?:\/\/mobile|w{3}?\.?twitter\.com\/?#?!?\/([^\/]+)/)
@@ -76,7 +84,7 @@ class LinkLogger
           end
         end
 
-      else 
+      else
         short_url = shorten(url)
         title = get_title(url)
         tumble(url, title, m.user.nick) if config[:tumblr]
@@ -106,7 +114,7 @@ class LinkLogger
   def tumble(url, title, nick)
     return unless config[:tumblr]
     # Redit
-    if redit = url.match(/^https?:\/\/.*imgur\.com.*([A-Za-z0-9]{5}\.\S{3})/)
+    if redit = url.match(/^https?:\/\/.*imgur\.com.*\/([A-Za-z0-9]+\.\S{3})/)
       post_image("http://i.imgur.com/#{redit[1]}", title, nick)
     # Images
     elsif url.match(/\.jpg|jpeg|gif|png$/i)
@@ -186,8 +194,8 @@ class LinkLogger
     # If the link is to an image, extract the filename.
     if url.match(/\.jpg|jpeg|gif|png$/)
       # unless it's from reddit, then change the url to the gallery to get the image's caption.
-      if url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)
-        imgur_id = url.match(/https?:\/\/i\.imgur\.com.+([A-Za-z0-9]{5})\.(jpg|jpeg|png|gif)/)[1]
+      if url.match(/https?:\/\/i\.imgur\.com.+\/([A-Za-z0-9]+)\.(jpg|jpeg|png|gif)/)
+        imgur_id = url.match(/https?:\/\/i\.imgur\.com.+\/([A-Za-z0-9]+)\.(jpg|jpeg|png|gif)/)[1]
         url = "http://imgur.com/#{imgur_id}"
       else
         site = url.match(/\.([^\.]+\.[^\/]+)/)
@@ -196,6 +204,7 @@ class LinkLogger
     end
 
     # Grab the element, return nothing if  the site doesn't have a title.
+    debug "URL: #{url}"
     page = Nokogiri::HTML(open(url)).css('title')
     return page.first.content.strip.gsub(/\s+/, ' ') unless page.empty?
   end

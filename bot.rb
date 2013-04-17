@@ -59,6 +59,16 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
       c.plugins.options[LinkLogger][:tumblr] = { :hostname  => conf['tumblr']['hostname'],
                                                  :tpass     => conf['tumblr']['tpass'] }
     end
+
+    # Twitter config
+    if conf.key?('twitter')
+      c.plugins.options[LinkLogger][:twitter] = { :consumer_key    => conf['twitter']['consumer_key'],
+                                                  :consumer_secret => conf['twitter']['consumer_secret'],
+                                                  :oauth_token     => conf['twitter']['oauth_token'],
+                                                  :oauth_secret    => conf['twitter']['oauth_secret'] }
+    end
+
+
   end
 
   on :channel, /\A\.(help|status)\z/ do |m|
