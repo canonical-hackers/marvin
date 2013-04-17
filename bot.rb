@@ -75,6 +75,14 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     m.reply "The following plugins are loaded: #{conf['plugins'].join(', ').downcase}. You can see their commands/usage by typing .help <plugin>."
   end
 
+  on :channel, /\A\.stats\z/ do |m|
+    if conf['stats_url']
+      m.user.send "The stats for the channel are available at: #{conf['stats_url']}"
+    else
+      m.user.send "No stats page has been defined for this channel, sorry!"
+    end
+  end
+
   on :notice, /IDENTIFY/ do |m|
     if m.user.nick == 'NickServ'
       m.reply "IDENTIFY #{conf['nickserv_pass']}"

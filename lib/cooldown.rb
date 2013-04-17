@@ -2,39 +2,38 @@ module Cinch
   module Plugin
     module ClassMethods
       def cooldown
-        if $cooldown && $cooldown[:config]
-          hook(:pre, :for => [:match], :method => lambda {|m| cooldown_finished?(m)})
-        end
+        hook(:pre, :for => [:match], :method => lambda {|m| cooldown_finished?(m)})
       end
     end
 
     def cooldown_finished?(m)
+      return true unless shared[:cooldown] && shared[:cooldown][:config]
       synchronize(:cooldown) do
         return true if m.channel.nil?
 
         channel = m.channel.name
         nick = m.user.nick
 
-        return true unless $cooldown[:config][channel]
+        return true unless shared[:cooldown][:config][channel]
 
-        unless $cooldown.key?(channel)
-          $cooldown[channel] = { 'global' => Time.now, nick => Time.now }
+        unless shared[:cooldown].key?(channel)
+          shared[:cooldown][channel] = { 'global' => Time.now, nick => Time.now }
           return true
         end
 
         if channel_cooldown_finished?(channel)
           # Global cd is up, check per user
-          if $cooldown[channel].key?(nick)
+          if shared[:cooldown][channel].key?(nick)
             # User's in the config, check time
             if user_cooldown_finished?(channel, nick)
-              $cooldown[channel]['global'] = Time.now
-              $cooldown[channel][nick] = Time.now
+              shared[:cooldown][channel]['global'] = Time.now
+              shared[:cooldown][channel][nick] = Time.now
               return true
             end
           else
             # User's not used bot before
-            $cooldown[channel][nick] = Time.now
-            $cooldown[channel]['global'] = Time.now
+            shared[:cooldown][channel][nick] = Time.now
+            shared[:cooldown][channel]['global'] = Time.now
             return true
           end
         end
@@ -52,27 +51,27 @@ module Cinch
     end
 
     def user_cooldown_finished?(chan, user)
-      $cooldown[:config][chan]['user']   < user_time_elapsed(chan, user)
+      shared[:cooldown][:config][chan]['user']   < user_time_elapsed(chan, user)
     end
 
     def channel_cooldown_finished?(chan)
-      $cooldown[:config][chan]['global'] < channel_time_elapsed(chan)
+      shared[:cooldown][:config][chan]['global'] < channel_time_elapsed(chan)
     end
 
     def channel_time_remaining(chan)
-      $cooldown[:config][chan]['global'] - channel_time_elapsed(chan)
+      shared[:cooldown][:config][chan]['global'] - channel_time_elapsed(chan)
     end
 
     def user_time_remaining(chan, user)
-      $cooldown[:config][chan]['user'] - user_time_elapsed(chan, user)
+      shared[:cooldown][:config][chan]['user'] - user_time_elapsed(chan, user)
     end
 
     def channel_time_elapsed(chan)
-      (Time.now - $cooldown[chan]['global']).floor
+      (Time.now - shared[:cooldown][chan]['global']).floor
     end
 
     def user_time_elapsed(chan, user)
-      (Time.now - $cooldown[chan][user]).floor
+      (Time.now - shared[:cooldown][chan][user]).floor
     end
   end
 end

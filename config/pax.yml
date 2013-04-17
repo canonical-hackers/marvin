@@ -1,0 +1,17 @@
+---
+- :type: east
+  :name: Pax East
+  :date: 2013-03-21 08:00:00 -08:00
+  :estimated: false
+- :type: prime
+  :name: Pax Prime
+  :date: 2013-08-23 08:00:00 -08:00
+  :estimated: true
+- :type: aus
+  :name: Pax Australia
+  :date: 2013-07-19 08:00:00 -08:00
+  :estimated: false
+- :type: east
+  :name: Pax East
+  :date: 2014-03-28 08:00:00 -08:00
+  :estimated: true

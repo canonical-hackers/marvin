@@ -3,39 +3,46 @@ class PaxTimer
   require 'time-lord'
   cooldown
 
+
   match /(time|pax|timetillpax)\z/, method: :next_pax
-  match /east|paxeast/, method: :east
-  match /prime|paxprime/, method: :prime
-
-
+  match /east|paxeast/, method: :next_east
+  match /prime|paxprime/, method: :next_prime
+  match /aus|paxaus/, method: :next_aus
   def initialize(*args)
     super
-    @pax = { :prime => Time.local(2012, 8, 31, 7),
-             :east  => Time.local(2013, 3, 22, 4) }
+    @filename = 'config/pax.yml'
   end
 
   def next_pax(m)
-    if @pax[:prime] < Time.now
-      east(m)
-    elsif @pax[:east] < Time.now
-      prime(m)
-    else
-      @pax[:east] > @pax[:prime] ? prime(m) : east(m)
+    m.reply get_next_pax
+  end
+
+  ['east', 'aus', 'prime'].each do |pax_type|
+    define_method "next_#{pax_type}" do |m|
+      m.reply get_next_pax(pax_type)
     end
   end
 
-  def east(m)
-    m.reply time_left('PAX East', @pax[:east])
-  end
+  def get_next_pax(type = nil)
+    if File::exist?(@filename)
+      @paxes = YAML::load(File.open(@filename))
 
-  def prime(m)
-    m.reply time_left('PAX Prime', @pax[:prime])
-  end
+      @paxes.delete_if { |pax| pax[:date] - Time.now < 0 }
+      @paxes.delete_if { |pax| pax[:type] != type } unless type.nil?
+      @paxes.sort! { |a,b| b[:date] <=> a[:date] }
 
-  def time_left(name, time)
-    return name + " has already passed for this year!" unless (time - Time.now) > 0
-    days = (time - Time.now) / 86400 # 86400 seconds in a day, etc.
-    hours = (days - days.floor) * 24
-    "#{name} is #{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
+      @pax = @paxes.pop
+      message = "#{@pax[:name]} is "
+      message << 'approximately ' if @pax[:estimated]
+
+      days = (@pax[:date] - Time.now) / 86400 # 86400 seconds in a day, etc.
+      hours = (days - days.floor) * 24
+      message << "#{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
+      message << " (No official date, yet)" if @pax[:estimated]
+      return message
+    else
+      debug "[PAX] #{@filename} DOES NOT EXIST, PLEASE MAKE ONE"
+      return
+    end
   end
 end
