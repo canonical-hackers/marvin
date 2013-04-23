@@ -21,6 +21,7 @@ class Karma
 
       m.message.scan(/.*?((\w+)|\((.+?)\))(\+\+|--)(\s|\z)/).each do |karma|
         debug "#{karma}"
+
         if karma[0]
           item = karma[1] || karma[2]
           item.downcase!

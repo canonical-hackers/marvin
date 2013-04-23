@@ -3,7 +3,6 @@ class PaxTimer
   require 'time-lord'
   cooldown
 
-
   match /(time|pax|timetillpax)\z/, method: :next_pax
   match /east|paxeast/, method: :next_east
   match /prime|paxprime/, method: :next_prime
@@ -37,7 +36,9 @@ class PaxTimer
 
       days = (@pax[:date] - Time.now) / 86400 # 86400 seconds in a day, etc.
       hours = (days - days.floor) * 24
-      message << "#{days.floor} days#{hours > 1 ? ", #{hours.floor} hours " : ''}away."
+      message << "#{days.floor} days "
+      message << ", #{hours.floor} hours " if hours > 1 
+      message << "away."
       message << " (No official date, yet)" if @pax[:estimated]
       return message
     else
