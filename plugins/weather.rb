@@ -23,7 +23,7 @@ class Weather
       temp_f = weather_data.temp_f
       conditions = weather_data.weather.downcase
       last_updated = weather_data.observation_time.gsub(/Last Updated on/, "")
-      last_updated_ago = Time.parse(last_updated).ago_in_words
+      last_updated_ago = Time.parse(last_updated).ago.to_words
 
       message = "In #{location} it is #{conditions} "
       message << "and #{temp_f}°F "

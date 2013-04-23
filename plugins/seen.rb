@@ -29,7 +29,7 @@ class Seen
     end
 
     if @storage.data[:seen][m.channel.name].key?(nick.downcase)
-      m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago_in_words}", true
+      m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago.to_words}", true
     else
       m.reply "I've never seen #{nick} before, sorry!", true
     end

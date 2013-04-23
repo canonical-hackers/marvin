@@ -24,7 +24,7 @@ class Hangouts
     else
       m.user.notice "These hangouts have been linked in the last #{@expire_mins} minutes. They may or may not still be going."
       hangouts.each do |hangout|
-        m.user.notice "#{hangout[:user]} started a hangout #{hangout[:time].ago_in_words} ago at #{hangout_url(hangout[:id])}"
+        m.user.notice "#{hangout[:user]} started a hangout #{hangout[:time].ago.to_words} ago at #{hangout_url(hangout[:id])}"
       end
     end
   end

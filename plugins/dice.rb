@@ -63,7 +63,7 @@ class Dice
       old = @storage.data[channel][nick]
       @storage.data[channel][nick] = { :score => result[:total], :time => Time.now }
 
-      m.reply "This is a new high score, their old score was #{old[:score]}, #{old[:time].ago_in_words}."
+      m.reply "This is a new high score, their old score was #{old[:score]}, #{old[:time].ago.to_words}."
     end
 
     # Keep an eye on this and only do it on changes if it becomes a perf issue.

@@ -59,10 +59,10 @@ class LinkLogger
 
           unless config[:reportstats] == false || link[:nick] == m.user.nick
             if link[:count] == 1
-              m.reply "That was already linked by #{link[:nick]} #{link[:time].ago_in_words}.", true
+              m.reply "That was already linked by #{link[:nick]} #{link[:time].ago.to_words}.", true
             else
               m.reply "That was already linked #{link[:count]} times. " +
-                      "#{link[:nick]} was the first to link it #{link[:time].ago_in_words}.", true
+                      "#{link[:nick]} was the first to link it #{link[:time].ago.to_words}.", true
             end
           end
         end

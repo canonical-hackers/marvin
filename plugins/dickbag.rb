@@ -118,7 +118,7 @@ class Dickbag
       message << " currently holding the bag of dicks"
 
       if @storage.data[:dickbag][:current].key?(:time)
-        message << ". I gave it to them #{@storage.data[:dickbag][:current][:time].ago_in_words}"
+        message << ". I gave it to them #{@storage.data[:dickbag][:current][:time].ago.to_words}"
       end
 
       unless @storage.data[:dickbag][:current].key?(:times_passed)
