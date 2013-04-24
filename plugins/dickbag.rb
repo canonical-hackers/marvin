@@ -7,6 +7,8 @@ class Dickbag
 
   include Cinch::Plugin
 
+  self.help = "Use .dickbag to get the bag, you know you want some tasty, tasty Dicks."
+
   cooldown
 
   def initialize(*args)
@@ -16,7 +18,6 @@ class Dickbag
     @storage.data[:stats]   ||= Hash.new
   end
 
-  self.help = "Use .dickbag to get the bag, you know you want some tasty, tasty Dicks."
   listen_to :channel
 
   set(:prefix => '')
@@ -141,6 +142,7 @@ class Dickbag
           message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{time_format(top[:time][:number])}"
         end
       end
+      message.strip!
       message << '.'
     else
       message = "no one seems to want my bag of dicks :("

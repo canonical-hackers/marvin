@@ -3,7 +3,7 @@ class Hangouts
   include Cinch::Plugin
   require 'time-lord'
 
-  self.help = "Use .hangouts to see the info for any recent hangouts."
+  self.help = "Use .hangouts to see the info for any recent hangouts. You can also use .hangouts subscribe to sign up for notifications."
 
   match /hangouts\z/, method: :list_hangouts
   match /hangouts subscribe/, method: :subscribe
