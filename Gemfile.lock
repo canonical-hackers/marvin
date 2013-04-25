@@ -23,6 +23,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.4)
+    calc (1.0.0)
     cinch (2.0.4)
     crack (0.1.7)
     diff-lcs (1.2.3)
@@ -85,6 +86,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  calc
   cinch
   crack (= 0.1.7)
   faraday
