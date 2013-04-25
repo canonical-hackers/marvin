@@ -7,7 +7,7 @@ class LinkLogger
   require 'tumblr'
 
   listen_to :channel
-  self.help = 'Use .links to see the last 10 links users have posted to the channel.'
+  self.help = 'Use .links to see the last links users have posted to the channel.'
   match /links/
 
   def initialize(*args)

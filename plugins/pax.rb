@@ -3,6 +3,8 @@ class PaxTimer
   require 'time-lord'
   cooldown
 
+  self.help = "Use .pax for the next pax or .east, .prime, or .aus for the time to a specific pax."
+
   match /(time|pax|timetillpax)\z/, method: :next_pax
   match /east|paxeast/, method: :next_east
   match /prime|paxprime/, method: :next_prime
