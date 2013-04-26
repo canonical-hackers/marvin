@@ -9,7 +9,11 @@ class SimpleCalc
 
   def execute(m, problem)
     begin
-      m.reply "#{Calc.evaluate(problem)}", true
+      answer = Calc.evaluate(problem)
+
+      unless answer == problem
+        m.reply "#{Calc.evaluate(problem)}", true
+      end
     rescue ZeroDivisionError
       m.reply "Fuck you.", true
     end
