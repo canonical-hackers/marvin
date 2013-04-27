@@ -3,7 +3,7 @@ class SimpleCalc
   include Cinch::Plugin
   cooldown
 
-  self.help = "Use .math <problem> to do simple math. (i.e. .math 2 + 2)"
+  self.help = "Use .math <problem> to do math. (i.e. .math 2 + 2)"
 
   match /math (.+)/
 
