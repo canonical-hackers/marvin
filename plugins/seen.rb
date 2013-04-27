@@ -30,7 +30,7 @@ class Seen
       return
     end
 
-    unless m.user.nick == nick.downcase
+    unless m.user.nick.downcase == nick.downcase
       if @storage.data[:seen][m.channel.name].key?(nick.downcase)
         m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago.to_words}", true
       else
