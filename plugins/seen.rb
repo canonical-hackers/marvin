@@ -2,6 +2,8 @@ class Seen
   require 'time-lord'
   include Cinch::Plugin
 
+  cooldown
+
   listen_to :channel
   self.help = "Use .seen <name> to see the last time that nick was active."
   attr_accessor :storage
@@ -28,10 +30,12 @@ class Seen
       return
     end
 
-    if @storage.data[:seen][m.channel.name].key?(nick.downcase)
-      m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago.to_words}", true
-    else
-      m.reply "I've never seen #{nick} before, sorry!", true
+    unless m.user.nick == nick.downcase
+      if @storage.data[:seen][m.channel.name].key?(nick.downcase)
+        m.reply "I last saw #{nick} #{@storage.data[:seen][m.channel.name][nick.downcase].ago.to_words}", true
+      else
+        m.reply "I've never seen #{nick} before, sorry!", true
+      end
     end
   end
 end

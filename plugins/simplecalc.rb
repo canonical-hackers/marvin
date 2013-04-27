@@ -1,7 +1,7 @@
 class SimpleCalc
   require 'calc'
-
   include Cinch::Plugin
+  cooldown
 
   self.help = "Use .math <problem> to do simple math. (i.e. .math 2 + 2)"
 
