@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'yaml'
+require 'cinch-toolbox'
 
 require 'cinch'
 require 'cinch/logger'
@@ -11,7 +12,6 @@ conf = YAML::load(File.open('config/bot.yml'))
 
 # Load Libs
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
-include Common
 
 # Load Plugins
 Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
@@ -31,15 +31,6 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
     # Plugins
     c.plugins.prefix  = '.'
     c.plugins.plugins = conf['plugins'].map { |plugin| Kernel.const_get(plugin) }
-
-    # Setup bit.ly config, exit if not configured.
-    if !conf.key?('bitly')
-      puts "Please set your bit.ly info in conf/bot.yml if you want to use plugins that use url shortening."
-      exit
-    else
-      c.shared = { :bitly => { :username => conf['bitly']['username'],
-                               :apikey   => conf['bitly']['apikey'] } }
-    end
 
     # Setup the cooldown if one is configured
     if conf.key?('cooldowns')

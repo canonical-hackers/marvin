@@ -1,6 +1,5 @@
 source "http://rubygems.org"
 gem 'nokogiri'
-gem 'ruby-bitly'
 gem 'cinch'
 gem 'time-lord'
 gem 'weather-underground'
@@ -15,6 +14,3 @@ gem 'faraday'
 gem 'calc'
 gem 'weary', :git => 'git://github.com/mwunsch/weary.git'
 gem 'tumblr-rb', :git => 'git://github.com/mwunsch/tumblr.git'
-
-
-
