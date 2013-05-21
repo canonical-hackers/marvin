@@ -1,11 +1,27 @@
 # -*- coding: utf-8 -*-
 require 'rubygems'
 require 'bundler/setup'
-require 'yaml'
-require 'cinch-toolbox'
 
 require 'cinch'
 require 'cinch/logger'
+#require 'cinch-logger-canonical'
+
+#require 'cinch-calculate'
+#require 'cinch-convert'
+#require 'cinch-dicebag'
+#require 'cinch-eventcountdown'
+#require 'cinch-hangouts'
+#require 'cinch-karma'
+#require 'cinch-logsearch'
+#require 'cinch-magic'
+#require 'cinch-seen'
+#require 'cinch-simplecalc'
+require 'cinch-links-logger'
+#require 'cinch-links-tumblr'
+#require 'cinch-twitterstatus'
+#require 'cinch-weatherman'
+#require 'cinch-urbandict'
+#require 'cinch-wikipedia'
 
 # Load the bot config
 conf = YAML::load(File.open('config/bot.yml'))
@@ -14,50 +30,63 @@ conf = YAML::load(File.open('config/bot.yml'))
 Dir[File.join('.', 'lib', '*.rb')].each { |file| require file }
 
 # Load Plugins
-Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
+#:Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 
 # Init Bot
 @bot = Cinch::Bot.new do
   configure do |c|
     # Base Config
-    c.nick         = conf['nick']
-    c.server       = conf['server']
-    c.channels     = conf['chans'].map { |chan| '#' + chan }
+    c.nick         = conf[:nick]
+    c.server       = conf[:server]
+    c.channels     = conf[:chans].map { |chan| "##{chan}" }
     c.max_messages = 1
-    if conf.key?('port')
-      c.port       = conf['port']
+    if conf.key?(:port)
+      c.port       = conf[:port]
     end
 
     # Plugins
     c.plugins.prefix  = '.'
-    c.plugins.plugins = conf['plugins'].map { |plugin| Kernel.const_get(plugin) }
+    c.plugins.plugins = [
+                          #Cinch::Plugins::Calculate
+                          #Cinch::Plugins::Convert
+                          #Cinch::Plugins::Dicebag
+                          #Cinch::Plugins::EventCountdown
+                          #Cinch::Plugins::Hangouts
+                          #Cinch::Plugins::Karma
+                          #Cinch::Plugins::LogSearch
+                          #Cinch::Plugins::Magic
+                          #Cinch::Plugins::Seen
+                          #Cinch::Plugins::SimpleCalc
+                          Cinch::Plugins::LinksLogger
+                          #Cinch::Plugins::LinksTumblr
+                          #Cinch::Plugins::TwitterStatus
+                          #Cinch::Plugins::Weatherman
+                          #Cinch::Plugins::UrbanDict
+                          #Cinch::Plugins::Wikipedia
+                        ]
 
     # Setup the cooldown if one is configured
-    if conf.key?('cooldowns')
-      c.shared[:cooldown] = { :config => conf['cooldowns'] }
+    if conf.key?(:cooldowns)
+      c.shared[:cooldown] = { :config => conf[:cooldowns] }
     end
 
     # Link logger config
-    if conf.key?('links')
-      c.plugins.options[LinkLogger] = { :logonly      => conf['links']['logonly'],
-                                        :twitter      => conf['links']['twitter'],
-                                        :whitelist    => conf['links']['whitelist'],
-                                        :reportstats  => conf['links']['reportstats'] }
+    if conf.key?(:links)
+      c.plugins.options[Cinch::Plugins::LinksLogger] = conf[:links]
     end
 
     # Tumblr config
-    if conf.key?('tumblr')
-      c.plugins.options[LinkLogger][:tumblr] = { :hostname  => conf['tumblr']['hostname'],
-                                                 :tpass     => conf['tumblr']['tpass'] }
-    end
+    #if conf.key?('tumblr')
+    #  c.plugins.options[Cinch::Plugins::LinksTumblr] = conf['tumblr']
+    #end
 
     # Twitter config
-    if conf.key?('twitter')
-      c.plugins.options[LinkLogger][:twitter] = { :consumer_key    => conf['twitter']['consumer_key'],
-                                                  :consumer_secret => conf['twitter']['consumer_secret'],
-                                                  :oauth_token     => conf['twitter']['oauth_token'],
-                                                  :oauth_secret    => conf['twitter']['oauth_secret'] }
-    end
+    #if conf.key?('twitter')
+    #  c.plugins.options[Cinch::Plugins::TwitterStatus] = { :consumer_key    => conf['twitter']['consumer_key'],
+    #                                                       :consumer_secret => conf['twitter']['consumer_secret'],
+    #                                                       :oauth_token     => conf['twitter']['oauth_token'],
+    #                                                       :oauth_secret    => conf['twitter']['oauth_secret'] }
+    #end
 
 
   end
@@ -82,10 +111,10 @@ Dir[File.join('.', 'plugins', '*.rb')].each { |file| require file }
 end
 
 # Loggers
-if conf.key?('logging')
-  conf['logging'].each do |channel|
-    @bot.loggers << Cinch::Logger::CanonicalLogger.new(channel, conf['nick'])
-  end
-end
+#if conf.key?('logging')
+#  conf['logging'].each do |channel|
+#    @bot.loggers << Cinch::Logger::CanonicalLogger.new(channel, @bot)
+#  end
+#end
 
 @bot.start

@@ -1,17 +1,30 @@
 ---
 - :type: east
+  :triggers:
+    - :east
+    - :paxeast
   :name: PAX East
   :date: 2013-03-21 08:00:00 -08:00
   :estimated: false
 - :type: prime
+  :triggers:
+    - :pax
+    - :paxprime
+    - :prime
   :name: PAX Prime
   :date: 2013-08-30 08:00:00 -08:00
   :estimated: false
 - :type: aus
+  :triggers:
+    - :aus
+    - :xap
   :name: PAX Australia
   :date: 2013-07-19 08:00:00 -08:00
   :estimated: false
 - :type: east
+  :triggers:
+    - :east
+    - :paxeast
   :name: PAX East
   :date: 2014-04-11 08:00:00 -08:00
-  :estimated: false 
+  :estimated: false

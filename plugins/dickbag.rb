@@ -9,11 +9,11 @@ class Dickbag
 
   self.help = "Use .dickbag to get the bag, you know you want some tasty, tasty Dicks."
 
-  cooldown
+  enforce_cooldown
 
   def initialize(*args)
     super
-    @storage = Storage.new('yaml/dickbag.yaml')
+    @storage = CinchStorage.new('yaml/dickbag.yaml')
     @storage.data[:dickbag] ||= Hash.new
     @storage.data[:stats]   ||= Hash.new
   end
@@ -55,18 +55,23 @@ class Dickbag
       return
     end
 
-    if @storage.data[:dickbag][:current].key?(:nick)
-      if @storage.data[:dickbag][:current][:nick] == m.user.nick
+
+    current_nick = @storage.data[:dickbag][:current][:nick]
+    current_time = @storage.data[:dickbag][:current][:time]
+    if current_nick
+      if current_nick == m.user.nick
         m.reply db_message('same_user'), true
       else
-        m.channel.action db_message('new_owner', {:new => m.user.nick,
-                                                  :old => @storage.data[:dickbag][:current][:nick]})
-        add_stats(@storage.data[:dickbag][:current][:nick], 0, @storage.data[:dickbag][:current][:time])
-        @storage.data[:dickbag][:current] = {:nick => m.user.nick, :time => Time.now,
-                              :times_passed => @storage.data[:dickbag][:current][:times_passed] + 1 }
+        m.channel.action db_message('new_owner', { :new => m.user.nick,
+                                                   :old => current_nick })
+        add_stats(current_nick, 0, current_time)
+        current = { :nick => m.user.nick, :time => Time.now,
+                    :times_passed => @storage.data[:dickbag][:current][:times_passed] + 1 }
+        @storage.data[:dickbag][:current] = current
         add_stats(m.user.nick, 1)
       end
     elsif @storage.data[:dickbag].key?(:last)
+      action = 
       if @storage.data[:dickbag][:last][:action] == 'nom'
         m.channel.action db_message('nom', {:new => m.user.nick,
                                             :old => @storage.data[:dickbag][:last][:nick]})
@@ -104,7 +109,7 @@ class Dickbag
     stats.sort! {|x,y| y[:time] <=> x[:time] }
     m.user.msg "Top 5 users by the total time they've had the bag:"
     stats[0..4].each_index do |i|
-      m.user.msg "#{i + 1}. #{stats[i][:nick]} - #{time_format(stats[i][:time])}"
+      m.user.msg "#{i + 1}. #{stats[i][:nick]} - #{Toolbox.time_format(stats[i][:time])}"
     end
   end
 
@@ -132,14 +137,14 @@ class Dickbag
         if top.key?(:count) && top.key?(:time) && top[:count][:nick] == top[:time][:nick]
           message << ". #{top[:count][:nick].capitalize} seems to love Dicks because they've held " +
                      "on to them more times (#{top[:count][:number]}) and " +
-                     "for longer (#{time_format(top[:time][:number])}) than anyone else "
+                     "for longer (#{Toolbox.time_format(top[:time][:number])}) than anyone else "
         elsif top.key?(:count) && top.key?(:time)
           message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}, " +
-                     "while #{top[:time][:nick]} has held them for the longest time at  #{time_format(top[:time][:number])}"
+                     "while #{top[:time][:nick]} has held them for the longest time at  #{Toolbox.time_format(top[:time][:number])}"
         elsif top.key?(:count)
           message << ". So far, #{top[:count][:nick]} has had the bag the most times at #{top[:count][:number]}"
         elsif top.key?(:time)
-          message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{time_format(top[:time][:number])}"
+          message << ". So far, #{top[time][:nick]} has held the bag for the longest time at #{Toolbox.time_format(top[:time][:number])}"
         end
       end
       message.strip!
