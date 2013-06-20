@@ -1,24 +1,12 @@
 source "http://rubygems.org"
 gem 'cinch'
-gem 'rspec'
-gem 'rspec-given'
-
-# Non-Gemmed Plugins
-gem 'cinch-eventcountdown', :git => 'git@github.com:bhaberer/cinch-eventcountdown.git'
-gem 'cinch-bag',            :git => 'git@github.com:bhaberer/cinch-bag.git'
-gem 'cinch-pax-timer',      :git => 'git@github.com:bhaberer/cinch-pax-timer.git'
-
-gem 'cinch-cooldown',       :path => '~/src/cinch-cooldown'
-# gem 'cinch-storage',        :path => '~/src/cinch-storage'
 
 # Plugins
-gem 'cinch-wikipedia',        '>= 0.0.1'
+gem 'cinch-wikipedia',        '~> 0.0.1'
 gem 'cinch-twitterstatus',    '>= 0.0.1'
 gem 'cinch-dicebag',          '>= 1.0.0'
 gem 'cinch-magic',            '>= 0.0.1'
 gem 'cinch-seen',             '>= 0.0.2'
-#gem 'cinch-hangouts',         '>= 0.0.1'
-gem 'cinch-hangouts',          :path => '~/src/cinch-hangouts'
 gem 'cinch-weatherman',       '>= 0.0.1'
 gem 'cinch-karma',            '>= 0.0.1'
 gem 'cinch-calculate',        '>= 0.0.1'
