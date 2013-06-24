@@ -1,81 +1,109 @@
-GIT
-  remote: git://github.com/mwunsch/tumblr.git
-  revision: ea79cf06cb5f736ca5ffd66999d2c11a9e53aeb1
-  specs:
-    tumblr-rb (2.0.1.snapshot)
-      launchy (~> 2.1.2)
-      sinatra (~> 1.3.2)
-      thor (~> 0.18.0)
-      weary (~> 1.1.0)
-
-GIT
-  remote: git://github.com/mwunsch/weary.git
-  revision: 9ba40df422396da64d4a41bba28bd20befc906f2
-  specs:
-    weary (1.1.3)
-      addressable (~> 2.3)
-      multi_json (~> 1.7)
-      promise (~> 0.3.0)
-      rack (~> 1.5)
-      simple_oauth (~> 0.2)
-
 GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.4)
     calc (1.0.0)
-    cinch (2.0.4)
-    crack (0.1.7)
-    diff-lcs (1.2.3)
+    cinch (2.0.5)
+    cinch-calculate (0.0.1)
+    cinch-convert (0.0.1)
+    cinch-cooldown (1.0.0)
+      time-lord (>= 1.0.1)
+    cinch-dicebag (1.0.2)
+      cinch (>= 2.0.0)
+      cinch-cooldown (>= 1.0.0)
+      cinch-storage (~> 0.0.2)
+      cinch-toolbox (~> 1.0.0)
+      time-lord (~> 1.0.1)
+    cinch-karma (0.0.1)
+      cinch (>= 2.0.0)
+      cinch-cooldown
+      cinch-storage
+    cinch-links-logger (0.0.1)
+      cinch-storage (>= 0.0.1)
+      cinch-toolbox (>= 0.0.5)
+      time-lord (>= 1.0.1)
+    cinch-links-tumblr (0.0.3)
+      cinch (>= 2.0.0)
+      cinch-storage (>= 0.0.1)
+      cinch-toolbox (>= 0.0.5)
+      tumblr-rb (>= 2.0.0)
+      weary (>= 1.1.3)
+    cinch-logger-canonical (0.0.1)
+    cinch-logsearch (0.0.1)
+    cinch-magic (0.0.1)
+      cinch-cooldown
+      cinch-toolbox
+    cinch-seen (0.0.2)
+      cinch (>= 2.0.0)
+      cinch-cooldown
+      cinch-storage
+      cinch-toolbox
+      time-lord (= 1.0.1)
+    cinch-simplecalc (0.0.1)
+      calc
+      cinch-cooldown
+    cinch-storage (0.0.2)
+      psych (= 1.3.4)
+    cinch-toolbox (1.0.1)
+      nokogiri (~> 1.5.9)
+      patron (~> 0.4.18)
+    cinch-twitterstatus (0.0.1)
+      twitter (= 4.6.2)
+    cinch-urbandict (1.0.0)
+      cinch (~> 2.0.4)
+      cinch-cooldown (~> 1.0.0)
+      cinch-toolbox (>= 1.0.0)
+    cinch-weatherman (0.0.1)
+      cinch (>= 2.0.0)
+      cinch-cooldown
+      time-lord (= 1.0.1)
+      weather-underground (>= 1.1.1)
+    cinch-wikipedia (1.0.0)
+      cinch (~> 2.0.4)
+      cinch-cooldown (~> 1.0.0)
+      cinch-toolbox (~> 1.0.0)
     faraday (0.8.7)
       multipart-post (~> 1.1)
-    file-tail (1.0.12)
-      tins (~> 0.5)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
-    json (1.7.7)
-    json_pure (1.7.7)
     launchy (2.1.2)
       addressable (~> 2.3)
     libxml-ruby (2.6.0)
-    mime-types (1.22)
+    mime-types (1.23)
     multi_json (1.7.2)
     multipart-post (1.2.0)
-    nokogiri (1.5.9)
+    nokogiri (1.5.10)
+    patron (0.4.18)
     promise (0.3.0)
+    psych (1.3.4)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec (2.13.0)
-      rspec-core (~> 2.13.0)
-      rspec-expectations (~> 2.13.0)
-      rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.1)
-    rspec-expectations (2.13.0)
-      diff-lcs (>= 1.1.3, < 2.0)
-    rspec-given (2.4.1)
-      rspec (>= 2.11)
-      sorcerer (>= 0.3.7)
-    rspec-mocks (2.13.1)
-    ruby-bitly (0.1.6)
-      json_pure (~> 1.7)
-      rest-client (~> 1.6)
     simple_oauth (0.2.0)
-    sinatra (1.3.6)
-      rack (~> 1.4)
-      rack-protection (~> 1.3)
-      tilt (~> 1.3, >= 1.3.3)
-    sorcerer (0.3.10)
+    sinatra (1.4.2)
+      rack (~> 1.5, >= 1.5.2)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
     temperature (1.2)
     thor (0.18.1)
-    tilt (1.3.7)
+    tilt (1.4.1)
     time-lord (1.0.1)
-    tins (0.7.2)
+    tumblr-rb (2.1.1)
+      launchy (~> 2.1.2)
+      sinatra (~> 1.4.0)
+      thor (~> 0.18.0)
+      weary (~> 1.1.0)
     twitter (4.6.2)
       faraday (~> 0.8, < 0.10)
       multi_json (~> 1.0)
+      simple_oauth (~> 0.2)
+    weary (1.1.3)
+      addressable (~> 2.3)
+      multi_json (~> 1.7)
+      promise (~> 0.3.0)
+      rack (~> 1.5)
       simple_oauth (~> 0.2)
     weather-underground (1.1.1)
       happymapper
@@ -86,19 +114,19 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  calc
-  cinch
-  crack (= 0.1.7)
-  faraday
-  file-tail
-  json (= 1.7.7)
-  multi_json
-  nokogiri
-  rspec
-  rspec-given
-  ruby-bitly
-  time-lord
-  tumblr-rb!
-  twitter (= 4.6.2)
-  weary!
-  weather-underground
+  cinch (~> 2.0.5)
+  cinch-calculate (~> 0.0.1)
+  cinch-convert (~> 0.0.1)
+  cinch-dicebag (~> 1.0.2)
+  cinch-karma (~> 0.0.1)
+  cinch-links-logger (~> 0.0.1)
+  cinch-links-tumblr (~> 0.0.3)
+  cinch-logger-canonical (~> 0.0.1)
+  cinch-logsearch (~> 0.0.1)
+  cinch-magic (~> 0.0.1)
+  cinch-seen (~> 0.0.2)
+  cinch-simplecalc (~> 0.0.1)
+  cinch-twitterstatus (~> 0.0.1)
+  cinch-urbandict (~> 1.0.0)
+  cinch-weatherman (~> 0.0.1)
+  cinch-wikipedia (~> 1.0.0)

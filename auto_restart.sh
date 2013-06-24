@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+export CINCH_SCRIPT_PID=$$
 /usr/bin/env ruby ./bot.rb
 git pull
 bundle install
