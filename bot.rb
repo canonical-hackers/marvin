@@ -45,48 +45,17 @@ conf = YAML::load(File.open('config/bot.yml'))
                           Cinch::Plugins::TwitterStatus,
                           Cinch::Plugins::Weatherman,
                           Cinch::Plugins::Wikipedia,
-                          Cinch::Plugins::UrbanDict
+                          Cinch::Plugins::UrbanDict,
                         ]
-
-    # Setup the cooldown if one is configured
-    if conf.key?(:cooldowns)
-      c.shared[:cooldown] = { :config => conf[:cooldowns] }
-    end
 
     # Link logger config
     if conf.key?(:links)
-      #c.plugins.options[Cinch::Plugins::LinksLogger] = conf[:links]
-    end
-
-    # Link logger config
-    if conf.key?(:gameclub)
-      c.plugins.options[Cinch::Plugins::Gameclub] = conf[:gameclub]
-    end
-
-    # Tumblr config
-    if conf.key?(:tumblr)
-    #  c.plugins.options[Cinch::Plugins::LinksTumblr] = conf[:tumblr]
+      c.plugins.options[Cinch::Plugins::LinksLogger] = conf[:links]
     end
 
     # Twitter config
     if conf.key?(:twitter)
-    #  c.plugins.options[Cinch::Plugins::TwitterStatus] = conf[:twitter]
-    end
-
-
-  end
-
-  on :channel, /\A\.stats\z/ do |m|
-    if conf['stats_url']
-      m.user.send "The stats for the channel are available at: #{conf[:stats_url]}"
-    else
-      m.user.send "No stats page has been defined for this channel, sorry!"
-    end
-  end
-
-  on :notice, /IDENTIFY/ do |m|
-    if m.user.nick == 'NickServ'
-      m.reply "IDENTIFY #{conf[:nickserv_pass]}"
+      c.plugins.options[Cinch::Plugins::TwitterStatus] = conf[:twitter]
     end
   end
 end
