@@ -3,7 +3,7 @@ GEM
   specs:
     addressable (2.3.4)
     calc (1.0.0)
-    cinch (2.0.4)
+    cinch (2.0.5)
     cinch-calculate (0.0.1)
     cinch-convert (0.0.1)
     cinch-cooldown (1.0.0)
@@ -49,17 +49,19 @@ GEM
       patron (~> 0.4.18)
     cinch-twitterstatus (0.0.1)
       twitter (= 4.6.2)
-    cinch-urbandict (0.0.3)
-      cinch-cooldown
-      cinch-toolbox (>= 0.0.3)
+    cinch-urbandict (1.0.0)
+      cinch (~> 2.0.4)
+      cinch-cooldown (~> 1.0.0)
+      cinch-toolbox (>= 1.0.0)
     cinch-weatherman (0.0.1)
       cinch (>= 2.0.0)
       cinch-cooldown
       time-lord (= 1.0.1)
       weather-underground (>= 1.1.1)
-    cinch-wikipedia (0.0.1)
-      cinch-cooldown
-      cinch-toolbox
+    cinch-wikipedia (1.0.0)
+      cinch (~> 2.0.4)
+      cinch-cooldown (~> 1.0.0)
+      cinch-toolbox (~> 1.0.0)
     faraday (0.8.7)
       multipart-post (~> 1.1)
     happymapper (0.4.0)
@@ -112,7 +114,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cinch (~> 2.0.4)
+  cinch (~> 2.0.5)
   cinch-calculate (~> 0.0.1)
   cinch-convert (~> 0.0.1)
   cinch-dicebag (~> 1.0.2)
@@ -125,6 +127,6 @@ DEPENDENCIES
   cinch-seen (~> 0.0.2)
   cinch-simplecalc (~> 0.0.1)
   cinch-twitterstatus (~> 0.0.1)
-  cinch-urbandict (~> 0.0.3)
+  cinch-urbandict (~> 1.0.0)
   cinch-weatherman (~> 0.0.1)
-  cinch-wikipedia (~> 0.0.1)
+  cinch-wikipedia (~> 1.0.0)
