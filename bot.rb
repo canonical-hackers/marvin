@@ -33,20 +33,7 @@ conf = YAML::load(File.open('config/bot.yml'))
 
     # Plugins
     c.plugins.prefix  = '.'
-    c.plugins.plugins = [
-                          Cinch::Plugins::Calculate,
-                          Cinch::Plugins::Convert,
-                          Cinch::Plugins::Dicebag,
-                          Cinch::Plugins::Karma,
-                          Cinch::Plugins::LinksLogger,
-                          Cinch::Plugins::LogSearch,
-                          Cinch::Plugins::Magic,
-                          Cinch::Plugins::Seen,
-                          Cinch::Plugins::TwitterStatus,
-                          Cinch::Plugins::Weatherman,
-                          Cinch::Plugins::Wikipedia,
-                          Cinch::Plugins::UrbanDict,
-                        ]
+    c.plugins.plugins = Cinch::Plugins.constants.map { |c| Class.module_eval("Cinch::Plugins::#{c}") }
 
     # Link logger config
     if conf.key?(:links)
