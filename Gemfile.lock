@@ -2,7 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     cinch (2.0.10)
-    cinch-calculate (1.0.2)
+    cinch-calculate (1.0.3)
       cinch (~> 2.0.5)
     cinch-convert (1.0.1)
       cinch (~> 2.0.5)
@@ -99,8 +99,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cinch (~> 2.0.5)
-  cinch-calculate (~> 1.0.2)
+  cinch (~> 2.0.10)
+  cinch-calculate (~> 1.0.3)
   cinch-convert (~> 1.0.1)
   cinch-dicebag (~> 1.0.7)
   cinch-karma (~> 1.0.2)

@@ -1,10 +1,10 @@
 source "http://rubygems.org"
 
 # Framework
-gem 'cinch',                  '~> 2.0.5'
+gem 'cinch',                  '~> 2.0.10'
 
 # Plugins
-gem 'cinch-calculate',        '~> 1.0.2'
+gem 'cinch-calculate',        '~> 1.0.3'
 gem 'cinch-convert',          '~> 1.0.1'
 gem 'cinch-dicebag',          '~> 1.0.7'
 gem 'cinch-karma',            '~> 1.0.2'
