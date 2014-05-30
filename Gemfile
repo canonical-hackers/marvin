@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 # Framework
-gem 'cinch',                  '~> 2.0.10'
+gem 'cinch',                  '~> 2.0.12'
 
 # Plugins
 gem 'cinch-calculate',        '~> 1.0.3'
