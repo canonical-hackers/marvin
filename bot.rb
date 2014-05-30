@@ -11,6 +11,7 @@ require 'cinch-dicebag'
 require 'cinch-karma'
 require 'cinch-logsearch'
 require 'cinch-magic'
+require 'cinch-notes'
 require 'cinch-seen'
 require 'cinch-links-logger'
 require 'cinch-links-titles'
@@ -39,6 +40,10 @@ conf = YAML::load(File.open('config/bot.yml'))
     # Link logger config
     if conf.key?(:links)
       c.plugins.options[Cinch::Plugins::LinksLogger] = conf[:links]
+    end
+
+    if conf.key?(:links)
+      c.plugins.options[Cinch::Plugins::LinksTitles] = conf[:links]
     end
 
     # Twitter config
