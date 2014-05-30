@@ -18,5 +18,4 @@ gem 'cinch-twitterstatus',    '~> 1.0.1'
 gem 'cinch-urbandict',        '~> 1.0.2'
 gem 'cinch-weatherman',       '~> 1.0.1'
 gem 'cinch-wikipedia',        '~> 1.0.0'
-gem 'cinch-sudo',             '~> 0.0.1'
-
+gem 'cinch-sudo', :git => 'https://github.com/canonical-hackers/cinch-sudo.git'
