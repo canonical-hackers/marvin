@@ -4,7 +4,7 @@ source "http://rubygems.org"
 gem 'cinch',                  '~> 2.0.12'
 
 # Plugins
-gem 'cinch-calculate',        '~> 1.0.3'
+gem 'cinch-calculate',        '~> 1.0.5'
 gem 'cinch-convert',          '~> 1.0.1'
 gem 'cinch-dicebag',          '~> 1.0.7'
 gem 'cinch-karma',            '~> 1.0.2'
