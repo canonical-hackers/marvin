@@ -82,11 +82,11 @@ GEM
       domain_name (~> 0.5)
     libxml-ruby (2.9.0)
     mime-types (2.99.3)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.1)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    nokogiri (1.11.0)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     psych (2.2.4)
@@ -133,7 +133,7 @@ DEPENDENCIES
   cinch-urbandict (~> 1.0.2)
   cinch-weatherman (~> 1.0.1)
   cinch-wikipedia (~> 1.0.0)
-  nokogiri (~> 1.11.0)
+  nokogiri (~> 1.11.4)
   rest-client (~> 1.8.0)
 
 BUNDLED WITH
